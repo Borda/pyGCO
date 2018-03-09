@@ -10,10 +10,10 @@ http://peterdowns.com/posts/first-time-with-pypi.html
 
 Pre-release package
 >>> python setup.py sdist upload -r pypitest
->>> pip install --index-url https://test.pypi.org/simple/ your-package
+>>> pip install --index-url https://test.pypi.org/simple/ --upgrade gco-wrapper
 Release package
 >>> python setup.py sdist upload -r pypi
->>> pip install your-package
+>>> pip install --upgrade gco-wrapper
 """
 
 import os
@@ -22,15 +22,16 @@ import logging
 import pkg_resources
 # import traceback
 try:
-    from setuptools import setup, Extension, Command, find_packages
+    from setuptools import setup, Extension # , Command, find_packages
     from setuptools.command.build_ext import build_ext
 except ImportError:
-    from distutils.core import setup, Extension, Command, find_packages
+    from distutils.core import setup, Extension # , Command, find_packages
     from distutils.command.build_ext import build_ext
 
 PACKAGE_NAME = 'gco-v3.0.zip'
 GCO_LIB = 'http://vision.csd.uwo.ca/code/' + PACKAGE_NAME
 LOCAL_SOURCE = 'gco_source'
+DOWNLOAD_SOURCE = False
 
 
 def _parse_requirements(file_path):
@@ -42,47 +43,52 @@ def _parse_requirements(file_path):
     return [str(i.req) for i in raw]
 
 
-class CustomBuildExtCommand(build_ext):
+class BuildExt(build_ext):
     """ build_ext command for use when numpy headers are needed.
-    SEE: https://stackoverflow.com/questions/2379898 """
-    def run(self):
-        # Import numpy here, only when headers are needed
+    SEE: https://stackoverflow.com/questions/2379898
+    SEE: https://stackoverflow.com/questions/19919905/how-to-bootstrap-numpy-installation-in-setup-py
+    """
+
+    def finalize_options(self):
+        build_ext.finalize_options(self)
+        # Prevent numpy from thinking it is still in its setup process:
+        # __builtins__.__NUMPY_SETUP__ = False
         import numpy
-        # Add numpy headers to include_dirs
         self.include_dirs.append(numpy.get_include())
-        # Call original build_ext command
-        build_ext.run(self)
 
 
-try:
-    import urllib3
-    import zipfile
-    import shutil
-    # download code
-    if not os.path.exists(PACKAGE_NAME):
-        http = urllib3.PoolManager()
-        with http.request('GET', GCO_LIB, preload_content=False) as resp, \
-                open(PACKAGE_NAME, 'wb') as out_file:
-            shutil.copyfileobj(resp, out_file)
-        resp.release_conn()
+if DOWNLOAD_SOURCE:
+    try:
+        import urllib3
+        import zipfile
+        import shutil
+        # download code
+        if not os.path.exists(PACKAGE_NAME):
+            http = urllib3.PoolManager()
+            with http.request('GET', GCO_LIB, preload_content=False) as resp, \
+                    open(PACKAGE_NAME, 'wb') as out_file:
+                shutil.copyfileobj(resp, out_file)
+            resp.release_conn()
 
-    # try:
-    #     if not os.path.exists(LOCAL_SOURCE):
-    #         os.mkdir(LOCAL_SOURCE)
-    # except:
-    #     print('no permission to create a directory')
+        # try:
+        #     if not os.path.exists(LOCAL_SOURCE):
+        #         os.mkdir(LOCAL_SOURCE)
+        # except:
+        #     print('no permission to create a directory')
 
-    # unzip the package
-    with zipfile.ZipFile(PACKAGE_NAME, 'r') as zip_ref:
-        zip_ref.extractall(LOCAL_SOURCE)
-except:
-    logging.warning('Fail source download or unzip, so last VCS will be used.')
-    #logging.warning(traceback.format_exc())
+        # unzip the package
+        with zipfile.ZipFile(PACKAGE_NAME, 'r') as zip_ref:
+            zip_ref.extractall(LOCAL_SOURCE)
+    except:
+        logging.warning('Fail source download or unzip, so last VCS will be used.')
+        #logging.warning(traceback.format_exc())
+
 
 source_files = ['graph.cpp', 'maxflow.cpp',
                 'LinkedBlockList.cpp', 'GCoptimization.cpp']
 gco_files = [os.path.join(LOCAL_SOURCE, f) for f in source_files]
 gco_files += [os.path.join('gco', 'cgco.cpp')]
+
 
 # parse_requirements() returns generator of pip.req.InstallRequirement objects
 try:
@@ -90,6 +96,7 @@ try:
 except:
     logging.warning('Fail load requirements file, so using default ones.')
     install_reqs = ['Cython', 'numpy']
+
 
 setup(name='gco-wrapper',
       url='http://vision.csd.uwo.ca/code/',
@@ -106,7 +113,7 @@ setup(name='gco-wrapper',
       platforms=['Linux'],
 
       zip_safe=False,
-      cmdclass={'build_ext': CustomBuildExtCommand},
+      cmdclass={'build_ext': BuildExt},
       ext_modules=[Extension('gco.libcgco',
                              gco_files,
                              language='c++',
@@ -114,6 +121,7 @@ setup(name='gco-wrapper',
                              library_dirs=[LOCAL_SOURCE],
                              extra_compile_args=["-fpermissive"]
                    )],
+      setup_requires=['numpy'],
       install_requires=install_reqs,
       # test_suite='nose.collector',
       # tests_require=['nose'],

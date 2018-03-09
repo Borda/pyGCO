@@ -57,6 +57,11 @@ pip install -r requirements.txt
 python setup.py install
 ```
 
+Now it can be also installed from PyPi
+```bash
+pip install gco-wrapper
+```
+
 ## Show test results
 
 Visualisation of the unary terns for **binary segmentation**
