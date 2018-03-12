@@ -1,19 +1,19 @@
 """
 The builder / installer
 
->>> pip install -r requirements.txt
->>> python setup.py build_ext --inplace
->>> python setup.py install
+>> pip install -r requirements.txt
+>> python setup.py build_ext --inplace
+>> python setup.py install
 
 For uploading to PyPi follow instructions
 http://peterdowns.com/posts/first-time-with-pypi.html
 
 Pre-release package
->>> python setup.py sdist upload -r pypitest
->>> pip install --index-url https://test.pypi.org/simple/ --upgrade gco-wrapper
+>> python setup.py sdist upload -r pypitest
+>> pip install --index-url https://test.pypi.org/simple/ --upgrade gco-wrapper
 Release package
->>> python setup.py sdist upload -r pypi
->>> pip install --upgrade gco-wrapper
+>> python setup.py sdist upload -r pypi
+>> pip install --upgrade gco-wrapper
 """
 
 import os
@@ -28,8 +28,6 @@ except ImportError:
     from distutils.core import setup, Extension # , Command, find_packages
     from distutils.command.build_ext import build_ext
 
-PACKAGE_NAME = 'gco-v3.0.zip'
-GCO_LIB = 'http://vision.csd.uwo.ca/code/' + PACKAGE_NAME
 LOCAL_SOURCE = 'gco_source'
 DOWNLOAD_SOURCE = False
 

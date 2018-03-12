@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 // will leave this one just for the laughs :)
 //#define olga_assert(expr) assert(!(expr))
@@ -703,10 +704,10 @@ GCoptimization::EnergyType GCoptimization::solveGreedy()
 
 		delete [] order;
 		delete [] e;
-	} catch (...) {
+	} catch (const GCException& exception) {
 		delete [] order;
 		delete [] e;
-		throw;
+		handleError(exception.message);
 	}
 	return efinal;
 }
@@ -1034,10 +1035,10 @@ GCoptimization::EnergyType GCoptimization::expansion(int max_num_iterations)
 			}
 		}
 	} 
-	catch (...)
+	catch (const GCException& exception)
 	{
 		m_stepsThisCycle = m_stepsThisCycleTotal = 0;
-		throw;
+		handleError(exception.message);
 	}
 	m_stepsThisCycle = m_stepsThisCycleTotal = 0; // set so that alpha_expansion() knows it's no inside expansion() if called externally
 	return new_energy;
@@ -1070,6 +1071,7 @@ void GCoptimization::setLabelOrder(const LabelID* order, LabelID size)
 
 void GCoptimization::handleError(const char *message)
 {
+	std::cerr << message << std::endl;
 	throw GCException(message);
 }
 
@@ -1078,7 +1080,7 @@ void GCoptimization::handleError(const char *message)
 void GCoptimization::checkInterrupt()
 {
 	if ( utIsInterruptPending() )
-		throw GCException("Interrupted.");
+		handleError("Interrupted.");
 }
 
 
@@ -1249,10 +1251,10 @@ bool GCoptimization::alpha_expansion(LabelID alpha_label)
 
 		printStatus2(alpha_label,-1,size,ticks0);
 	} 
-	catch (...)
+	catch (const GCException& exception)
 	{
 		delete [] activeSites;
-		throw;
+		handleError(exception.message);
 	}
 	delete [] activeSites;
 	return afterExpansionEnergy < m_beforeExpansionEnergy;
@@ -1302,10 +1304,10 @@ GCoptimization::EnergyType GCoptimization::swap(int max_num_iterations)
 			curr_cycle++;
 		}
 	} 
-	catch (...)
+	catch (const GCException& exception)
 	{
 		m_stepsThisCycle = m_stepsThisCycleTotal = 0;
-		throw;
+		handleError(exception.message);
 	}
 	m_stepsThisCycle = m_stepsThisCycleTotal = 0;
 
@@ -1381,10 +1383,10 @@ void GCoptimization::alpha_beta_swap(LabelID alpha_label, LabelID beta_label)
 		}
 		m_labelingInfoDirty = true;
 	} 
-	catch (...)
+	catch (const GCException& exception)
 	{
 		delete [] activeSites;
-		throw;
+		handleError(exception.message);
 	}
 	delete [] activeSites;
 
@@ -1796,9 +1798,9 @@ void GCoptimization::DataCostFnSparse::set(LabelID l, const SparseDataCost* cost
 		SiteID end_site = (i+1)*cSitesPerBucket;
 		while (next < end && next->site < end_site) {
 			if (next->site < 0 || next->site >= m_num_sites)
-				throw GCException("Invalid site id given for sparse data cost; must be within range.");
+				handleError("Invalid site id given for sparse data cost; must be within range.");
 			if (next->site <= prev_site)
-				throw GCException("Sparse data costs must be sorted in increasing order of SiteID");
+				handleError("Sparse data costs must be sorted in increasing order of SiteID");
 			prev_site = next->site;
 			++next;
 		}
