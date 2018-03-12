@@ -28,6 +28,8 @@ except ImportError:
     from distutils.core import setup, Extension # , Command, find_packages
     from distutils.command.build_ext import build_ext
 
+PACKAGE_NAME = 'gco-v3.0.zip'
+GCO_LIB = 'http://vision.csd.uwo.ca/code/' + PACKAGE_NAME
 LOCAL_SOURCE = 'gco_source'
 DOWNLOAD_SOURCE = False
 
