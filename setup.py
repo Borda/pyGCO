@@ -26,6 +26,8 @@ except ImportError:
     from distutils.command.build_ext import build_ext
 
 HERE = os.path.abspath(os.path.dirname(__file__))
+PACKAGE_NAME = 'gco-v3.0.zip'
+URL_LIB_GCO = 'http://vision.csd.uwo.ca/code/' + PACKAGE_NAME
 LOCAL_SOURCE = 'gco_source'
 
 
