@@ -22,6 +22,11 @@ output/
 results/
 temporary/
 test_wrapper
+*.lib
+*.dll
+*.obj
+*.exp
+*.exe
 
 # PyCharm
 .idea/

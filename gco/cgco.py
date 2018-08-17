@@ -15,6 +15,8 @@ if '.so' in lib_exts:
     _CGCO_LIB_NAME = LIST_LIBGCO[lib_exts.index('.so')]
 elif '.lib' in lib_exts:
     _CGCO_LIB_NAME = LIST_LIBGCO[lib_exts.index('.lib')]
+elif '.dll' in lib_exts:
+    _CGCO_LIB_NAME = LIST_LIBGCO[lib_exts.index('.dll')]
 else:  # not sure what it found...
     print('found libs: %s' % repr([os.path.basename(p) for p in LIST_LIBGCO]))
     _CGCO_LIB_NAME = os.path.basename(LIST_LIBGCO[0])
