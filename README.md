@@ -1,10 +1,9 @@
 # pyGCO: a python wrapper for the graph cuts
 
-[![Build Status](https://travis-ci.org/Borda/pyGCO.svg?branch=master)](https://travis-ci.org/Borda/pyGCO)
+[![Run Status](https://api.shippable.com/projects/5883a5e12a5d900f00b8b9ff/badge?branch=master)](https://app.shippable.com/github/Borda/pyGCO)
 [![codecov](https://codecov.io/gh/Borda/pyGCO/branch/master/graph/badge.svg)](https://codecov.io/gh/Borda/pyGCO)
 [![Build status](https://ci.appveyor.com/api/projects/status/ovfsssqdb1c0xg0l?svg=true)](https://ci.appveyor.com/project/Borda/pygco)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4b875e6fbf3349e18a139a2a005736a4)](https://www.codacy.com/app/Borda/pyGCO?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Borda/pyGCO&amp;utm_campaign=Badge_Grade)
-[![Run Status](https://api.shippable.com/projects/5883a5e12a5d900f00b8b9ff/badge?branch=master)](https://app.shippable.com/github/Borda/pyGCO)
 [![Coverage Badge](https://api.shippable.com/projects/5883a5e12a5d900f00b8b9ff/coverageBadge?branch=master)](https://app.shippable.com/github/Borda/pyGCO)
 [![Maintainability](https://api.codeclimate.com/v1/badges/9c11485e2f4f23189069/maintainability)](https://codeclimate.com/github/Borda/pyGCO/maintainability)
 
