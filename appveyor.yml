@@ -45,15 +45,14 @@ install:
 
 build_script:
   # Build the compiled extension
-  - cl gco_source\LinkedBlockList.cpp /link /out:LinkedBlockList.obj
-  - cl gco_source\graph.cpp /link /out:graph.obj
-  - cl gco_source\maxflow.cpp /link /out:maxflow.obj
-  - cl gco_source\GCoptimization.cpp /link /out:GCoptimization.obj
-  - cl cgco.cpp /link /out:cgco.obj
-  - cl LinkedBlockList.obj graph.obj maxflow.obj GCoptimization.obj cgco.obj /link /dll /out:libcgco.dll
-  - cl /EHsc test_wrapper.cpp libcgco.lib
+  #- cl gco_source\LinkedBlockList.cpp /link /out:LinkedBlockList.obj
+  #- cl gco_source\graph.cpp /link /out:graph.obj
+  #- cl gco_source\maxflow.cpp /link /out:maxflow.obj
+  #- cl gco_source\GCoptimization.cpp /link /out:GCoptimization.obj
+  #- cl cgco.cpp /link /out:cgco.obj
+  #- cl LinkedBlockList.obj graph.obj maxflow.obj GCoptimization.obj cgco.obj /link /dll /out:libcgco.dll
+  #- cl /EHsc test_wrapper.cpp libcgco.lib
   - python setup.py build_ext --inplace
-  # - python setup.py install
   - dir
 
 test_script:
