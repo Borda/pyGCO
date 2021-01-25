@@ -43,6 +43,9 @@ class BuildExt(build_ext):
     SEE: https://stackoverflow.com/questions/19919905/how-to-bootstrap-numpy-installation-in-setup-py
     """
 
+    def get_export_symbols(self, ext):
+        return None
+
     def finalize_options(self):
         build_ext.finalize_options(self)
         # Prevent numpy from thinking it is still in its setup process:
