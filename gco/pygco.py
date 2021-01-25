@@ -307,8 +307,8 @@ def cut_general_graph(edges, edge_weights, unary_cost, pairwise_cost=None,
     >>> unary[:5, 1] = 1.
     >>> pairwise = (1 - np.eye(unary.shape[1])) * 0.5
     >>> labels = cut_general_graph(edges, weights, unary, pairwise)
-    >>> labels
-    array([0, 0, 0, 0, 0, 1, 1, 1, 1, 1], dtype=int32)
+    >>> labels  # doctest: +ELLIPSIS
+    array([0, 0, 0, 0, 0, 1, 1, 1, 1, 1]...)
     """
     energy_is_float = (unary_cost.dtype in _float_types) or \
         (edge_weights.dtype in _float_types) or \
