@@ -1,4 +1,4 @@
-import platform
+import sys
 
 import numpy as np
 import ctypes as ct
@@ -16,7 +16,7 @@ _PAIRWISE_FLOAT_PRECISION = 1000
 _SMOOTH_COST_PRECISION = 100
 
 _int_types = [np.int, np.intc, np.int32, np.int64, np.longlong]
-if platform.system() == "Windows":
+if sys.platform == 'win32':
     _float_types = [np.float, np.float32, np.float64]
 else:
     _float_types = [np.float, np.float32, np.float64, np.float128]
