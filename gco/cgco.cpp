@@ -2,15 +2,15 @@
  * Many error checks are not performed because it seems hard to pass these
  * error message back to python.
  *
- * So be careful when using this wrapper, and make sure the parameters in 
+ * So be careful when using this wrapper, and make sure the parameters in
  * function calls are valid.
  *
  * This wrapper now only supports general graph.  The grid graph is not
  * implemented yet.
  *
- * The return value of all functions are integers, which can be potentially 
+ * The return value of all functions are integers, which can be potentially
  * used for error signals. If it is required to return something, the address
- * of the required return value is passed as an argument to the function and 
+ * of the required return value is passed as an argument to the function and
  * it will be filled with the expected return value after the call.
  *
  * Yujia Li, 08/2013

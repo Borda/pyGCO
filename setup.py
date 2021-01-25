@@ -90,7 +90,7 @@ install_reqs = _parse_requirements(os.path.join(HERE, 'requirements.txt'))
 setup(name='gco-wrapper',
       url='http://vision.csd.uwo.ca/code/',
       packages=['gco'],
-      version='3.0.3',
+      version='3.0.4',
       license='MIT',
 
       author='Yujia Li & A. Mueller',
