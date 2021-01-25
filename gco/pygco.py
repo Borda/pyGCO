@@ -1,3 +1,5 @@
+import platform
+
 import numpy as np
 import ctypes as ct
 try:
@@ -14,7 +16,10 @@ _PAIRWISE_FLOAT_PRECISION = 1000
 _SMOOTH_COST_PRECISION = 100
 
 _int_types = [np.int, np.intc, np.int32, np.int64, np.longlong]
-_float_types = [np.float, np.float32, np.float64, np.float128]
+if platform.system() == "Windows":
+    _float_types = [np.float, np.float32, np.float64]
+else:
+    _float_types = [np.float, np.float32, np.float64, np.float128]
 
 _SMALL_CONSTANT = 1e-10
 
