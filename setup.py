@@ -54,28 +54,6 @@ class BuildExt(build_ext):
         self.include_dirs.append(numpy.get_include())
 
 
-# if DOWNLOAD_SOURCE:
-#     PACKAGE_NAME = 'gco-v3.0.zip'
-#     GCO_LIB = 'http://vision.csd.uwo.ca/code/' + PACKAGE_NAME
-#     try:
-#         import urllib3
-#         import zipfile
-#         import shutil
-#         # download code
-#         if not os.path.exists(PACKAGE_NAME):
-#             http = urllib3.PoolManager()
-#             with http.request('GET', GCO_LIB, preload_content=False) as resp, \
-#                     open(PACKAGE_NAME, 'wb') as out_file:
-#                 shutil.copyfileobj(resp, out_file)
-#             resp.release_conn()
-#
-#         # unzip the package
-#         with zipfile.ZipFile(PACKAGE_NAME, 'r') as zip_ref:
-#             zip_ref.extractall(LOCAL_SOURCE)
-#     except Exception:
-#         logging.warning('Fail download or unzip source, so local VCS is used.')
-
-
 SOURCE_FILES = [
     'graph.cpp',
     'maxflow.cpp',
@@ -85,13 +63,20 @@ SOURCE_FILES = [
 gco_files = [os.path.join(LOCAL_SOURCE, f) for f in SOURCE_FILES]
 gco_files += [os.path.join('gco', 'cgco.cpp')]
 
-install_reqs = _parse_requirements(os.path.join(HERE, 'requirements.txt'))
+if sys.version_info.major == 2:
+    # numpy v1.17 drops support for py2
+    setup_reqs = ['Cython', 'numpy<1.17']
+    install_reqs = _parse_requirements(os.path.join(HERE, 'requirements-py2.txt'))
+else:
+    setup_reqs = ['Cython', 'numpy']
+    install_reqs = _parse_requirements(os.path.join(HERE, 'requirements.txt'))
+
 
 setup(
     name='gco-wrapper',
     url='http://vision.csd.uwo.ca/code/',
     packages=['gco'],
-    version='3.0.6',
+    version='3.0.7',
     license='MIT',
 
     author='Yujia Li & A. Mueller',
@@ -116,7 +101,7 @@ setup(
             # extra_compile_args=["-fpermissive"],
         ),
     ],
-    setup_requires=['numpy'],  # numpy v1.17 drops support for py2
+    setup_requires=setup_reqs,
     install_requires=install_reqs,
     # test_suite='nose.collector',
     # tests_require=['nose'],

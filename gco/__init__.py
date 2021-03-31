@@ -1,8 +1,5 @@
-__version__ = '3.0.2'
-__version_info__ = (3, 0, 2)
-
-# import cgco
-# import pygco
+__version__ = '3.0.7'
+__version_info__ = (3, 0, 7)
 
 try:
     from pygco import *

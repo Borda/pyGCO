@@ -1,4 +1,4 @@
 Cython>=0.23.1
-numpy>=1.8.2,<1.17  # since v1.17 drops suppport for py2
+numpy>=1.8.2
 matplotlib>=1.3.1
 urllib3
