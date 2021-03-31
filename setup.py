@@ -17,6 +17,7 @@ Release package
 """
 
 import os
+import sys
 
 try:
     from setuptools import setup, Extension # , Command, find_packages
