@@ -1,21 +1,22 @@
 import os
 import unittest
 
-import numpy as np
 import matplotlib
-matplotlib.use('Agg') # Force matplotlib to not use any Xwindows backend.
+import numpy as np
+
+matplotlib.use('Agg')  # Force matplotlib to not use any Xwindows backend.
 import matplotlib.pyplot as plt
 
 import gco
+
 PLOT_SIZE = 6
 DIR_IMAGES = 'images'
 np.random.seed(0)
 
-
 try:
     if not os.path.isdir(DIR_IMAGES):
         os.mkdir(DIR_IMAGES)
-except:
+except FileExistsError:
     print('no permission to create a directory')
 
 # def get_uniform_smoothness_pw_single_image(img):
@@ -65,32 +66,32 @@ def test_gc():
 
 def test_integer():
     """  """
-    unary = np.array([[2, 8, 8],
-                      [7, 3, 7],
-                      [8, 8, 2],
-                      [6, 4, 6]])
+    unary = np.array([
+        [2, 8, 8],
+        [7, 3, 7],
+        [8, 8, 2],
+        [6, 4, 6],
+    ])
     edges = np.array([[0, 1], [1, 2], [2, 3]])
     edge_weight = np.array([3, 10, 1])
     smooth = 1 - np.eye(3)
 
-    labels = gco.cut_general_graph(edges, edge_weight, unary, smooth,
-                                   n_iter=1)
+    labels = gco.cut_general_graph(edges, edge_weight, unary, smooth, n_iter=1)
     assert np.array_equal(labels, np.array([0, 2, 2, 1]))
 
 
 def test_float():
     """  """
-    unary = np.array([[0.0, 1.0, 2.0],
-                      [4.0, 1.0, 0.0],
-                      [1.0, 0.0, 2.0]])
-    edges = np.array([[0, 1],
-                      [1, 2],
-                      [0, 2]]).astype(np.int32)
+    unary = np.array([
+        [0.0, 1.0, 2.0],
+        [4.0, 1.0, 0.0],
+        [1.0, 0.0, 2.0],
+    ])
+    edges = np.array([[0, 1], [1, 2], [0, 2]]).astype(np.int32)
     smooth = (1 - np.eye(3)).astype(np.float)
     edge_weights = np.array([2.0, 0.0, 0.0])
 
-    labels = gco.cut_general_graph(edges, edge_weights, unary, smooth,
-                                   n_iter=-1, algorithm="swap")
+    labels = gco.cut_general_graph(edges, edge_weights, unary, smooth, n_iter=-1, algorithm="swap")
     assert np.array_equal(labels, np.array([0, 2, 1]))
 
 
@@ -118,8 +119,7 @@ def test_grid():
     unary[:, :, 1] = tmp
     unary[:, :, 2] = 2 - unary[:, :, 2]
 
-    fig, axarr = plt.subplots(ncols=unary.shape[-1],
-                              figsize=(unary.shape[-1] * PLOT_SIZE, PLOT_SIZE))
+    fig, axarr = plt.subplots(ncols=unary.shape[-1], figsize=(unary.shape[-1] * PLOT_SIZE, PLOT_SIZE))
     draw_unary(axarr, unary)
     fig.tight_layout()
     fig.savefig(os.path.join(DIR_IMAGES, 'grid_unary.png'))
@@ -154,8 +154,7 @@ def test_binary():
     unary[:, :, 1] = -img
     unary += 4
 
-    fig, axarr = plt.subplots(ncols=unary.shape[-1],
-                              figsize=(unary.shape[-1] * PLOT_SIZE, PLOT_SIZE))
+    fig, axarr = plt.subplots(ncols=unary.shape[-1], figsize=(unary.shape[-1] * PLOT_SIZE, PLOT_SIZE))
     draw_unary(axarr, unary)
     fig.tight_layout()
     fig.savefig(os.path.join(DIR_IMAGES, 'binary_unary.png'))

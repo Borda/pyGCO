@@ -1,7 +1,8 @@
+import ctypes as ct  # noqa: F401
 import sys
 
 import numpy as np
-import ctypes as ct
+
 try:
     from cgco import _cgco, _SMOOTH_COST_FN
 except Exception:
@@ -26,6 +27,7 @@ _SMALL_CONSTANT = 1e-10
 
 # error classes
 class PyGcoError(Exception):
+
     def __init__(self, msg=''):
         self.msg = msg
 
@@ -46,6 +48,7 @@ class IndexOutOfBoundError(PyGcoError):
 
 
 class GCO(object):
+
     def __init__(self):
         pass
 
@@ -62,8 +65,7 @@ class GCO(object):
         """
         self.temp_array = np.empty(1, dtype=np.intc)
         self.energy_temp_array = np.empty(1, dtype=np.longlong)
-        _cgco.gcoCreateGeneralGraph(np.intc(num_sites), np.intc(num_labels),
-                                    self.temp_array)
+        _cgco.gcoCreateGeneralGraph(np.intc(num_sites), np.intc(num_labels), self.temp_array)
 
         self.handle = self.temp_array[0]
         self.nb_sites = np.intc(num_sites)
@@ -121,8 +123,7 @@ class GCO(object):
         nb_sites x nb_labels. unary can be either integers or float"""
 
         if (self.nb_sites, self.nb_labels) != unary.shape:
-            raise ShapeMismatchError(
-                "Shape of unary potentials does not match the graph.")
+            raise ShapeMismatchError("Shape of unary potentials does not match the graph.")
 
         # Just a reference
         self._unary = self._convert_unary_array(unary)
@@ -134,8 +135,12 @@ class GCO(object):
         if site >= self.nb_sites or site < 0 or label < 0 \
                 or label >= self.nb_labels:
             raise IndexOutOfBoundError()
-        _cgco.gcoSetSiteDataCost(self.handle, np.intc(site), np.intc(label),
-                                 self._convert_unary_term(e))
+        _cgco.gcoSetSiteDataCost(
+            self.handle,
+            np.intc(site),
+            np.intc(label),
+            self._convert_unary_term(e),
+        )
 
     def set_neighbor_pair(self, s1, s2, w):
         """Create an edge (s1, s2) with weight w.
@@ -143,8 +148,12 @@ class GCO(object):
         s1 should be smaller than s2."""
         if not (0 <= s1 < s2 < self.nb_sites):
             raise IndexOutOfBoundError()
-        _cgco.gcoSetNeighborPair(self.handle, np.intc(s1), np.intc(s2),
-                                 self._convert_pairwise_term(w))
+        _cgco.gcoSetNeighborPair(
+            self.handle,
+            np.intc(s1),
+            np.intc(s2),
+            self._convert_pairwise_term(w),
+        )
 
     def set_all_neighbors(self, s1, s2, w):
         """Setup the whole neighbor system in the graph.
@@ -164,8 +173,13 @@ class GCO(object):
         self._edge_s2 = s2.astype(np.intc)
         self._edge_w = self._convert_pairwise_array(w)
 
-        _cgco.gcoSetAllNeighbors(self.handle, self._edge_s1, self._edge_s2,
-                                 self._edge_w, np.intc(self._edge_s1.size))
+        _cgco.gcoSetAllNeighbors(
+            self.handle,
+            self._edge_s1,
+            self._edge_s2,
+            self._edge_w,
+            np.intc(self._edge_s1.size),
+        )
 
     def set_smooth_cost(self, cost):
         """Set smooth cost. cost should be a symmetric numpy square matrix of
@@ -186,13 +200,18 @@ class GCO(object):
         """Set smooth cost for a pair of labels l1, l2."""
         if not (0 <= l1 < self.nb_labels) or not (0 <= l2 < self.nb_labels):
             raise IndexOutOfBoundError()
-        _cgco.gcoSetPairSmoothCost(self.handle, np.intc(l1), np.intc(l2),
-                                   self._convert_smooth_cost_term(cost))
+        _cgco.gcoSetPairSmoothCost(
+            self.handle,
+            np.intc(l1),
+            np.intc(l2),
+            self._convert_smooth_cost_term(cost),
+        )
 
     def set_smooth_cost_function(self, fun):
         """Pass a function to calculate the smooth cost for sites s1 and s2 labeled l1 and l2.
             Function is of from fun (s1, s1, l1, l2) -> cost
         """
+
         def _typesafe(s1, s2, l1, l2):
             return self._convert_smooth_cost_term(fun(s1, s2, l1, l2))
 
@@ -264,9 +283,16 @@ class GCO(object):
         _cgco.gcoInitLabelAtSite(self.handle, np.intc(site), np.intc(label))
 
 
-def cut_general_graph(edges, edge_weights, unary_cost, pairwise_cost=None,
-                      n_iter=-1, algorithm='expansion', init_labels=None,
-                      down_weight_factor=None):
+def cut_general_graph(
+    edges,
+    edge_weights,
+    unary_cost,
+    pairwise_cost=None,
+    n_iter=-1,
+    algorithm='expansion',
+    init_labels=None,
+    down_weight_factor=None,
+):
     """
     Apply multi-label graph cuts to arbitrary graph given by `edges`.
 
@@ -314,27 +340,23 @@ def cut_general_graph(edges, edge_weights, unary_cost, pairwise_cost=None,
         (edge_weights.dtype in _float_types) or \
         (pairwise_cost.dtype in _float_types)
 
-    if not energy_is_float and not (
-            (unary_cost.dtype in _int_types) and
-            (edge_weights.dtype in _int_types) and
-            (pairwise_cost.dtype in _int_types)):
+    type_not_in = not all(arr.dtype in _int_types for arr in [unary_cost, edge_weights, pairwise_cost])
+    if not energy_is_float and type_not_in:
         raise DataTypeNotSupportedError(
             "Unary and pairwise potentials should have consistent types. "
-            "Either integers of floats. Mixed types or other types are not "
-            "supported.")
+            "Either integers of floats. Mixed types or other types are not supported."
+        )
 
     n_sites, n_labels = unary_cost.shape
 
     if down_weight_factor is None:
-        down_weight_factor = max(np.abs(unary_cost).max(),
-                                 np.abs(edge_weights).max() *
-                                 pairwise_cost.max()) + _SMALL_CONSTANT
+        max_arr = max(np.abs(unary_cost).max(), np.abs(edge_weights).max() * pairwise_cost.max())
+        down_weight_factor = max_arr + _SMALL_CONSTANT
 
     gc = GCO()
     gc.create_general_graph(n_sites, n_labels, energy_is_float)
     gc.set_data_cost(unary_cost / down_weight_factor)
-    gc.set_all_neighbors(edges[:, 0], edges[:, 1],
-                         edge_weights / down_weight_factor)
+    gc.set_all_neighbors(edges[:, 0], edges[:, 1], edge_weights / down_weight_factor)
     if pairwise_cost is not None:
         gc.set_smooth_cost(pairwise_cost)
 
@@ -416,8 +438,16 @@ def get_images_edges_diag(height, width):
     return dr_edges_from, dl_edges_from, dr_edges_to, dl_edges_to
 
 
-def cut_grid_graph(unary_cost, pairwise_cost, cost_v, cost_h, cost_dr=None,
-                   cost_dl=None, n_iter=-1, algorithm='expansion'):
+def cut_grid_graph(
+    unary_cost,
+    pairwise_cost,
+    cost_v,
+    cost_h,
+    cost_dr=None,
+    cost_dl=None,
+    n_iter=-1,
+    algorithm='expansion',
+):
     """
     Apply multi-label graphcuts to grid graph.
 
@@ -452,15 +482,13 @@ def cut_grid_graph(unary_cost, pairwise_cost, cost_v, cost_h, cost_dr=None,
                       (cost_v.dtype in _float_types) or \
                       (cost_h.dtype in _float_types)
 
-    if not energy_is_float and not (
-        (unary_cost.dtype in _int_types) and
-        (pairwise_cost.dtype in _int_types) and
-            (cost_v.dtype in _int_types) and
-            (cost_h.dtype in _int_types)):
+    type_not_in = not all(arr.dtype in _int_types for arr in [unary_cost, pairwise_cost, cost_v, cost_h])
+    if not energy_is_float and type_not_in:
         raise DataTypeNotSupportedError(
             "Unary and pairwise potentials should have consistent types. "
             "Either integers of floats. Mixed types or other types are not "
-            "supported.")
+            "supported."
+        )
 
     height, width, n_labels = unary_cost.shape
 
@@ -514,8 +542,7 @@ def cut_grid_graph(unary_cost, pairwise_cost, cost_v, cost_h, cost_dr=None,
     return labels
 
 
-def cut_grid_graph_simple(unary_cost, pairwise_cost, n_iter=-1,
-                          connect=4, algorithm='expansion'):
+def cut_grid_graph_simple(unary_cost, pairwise_cost, n_iter=-1, connect=4, algorithm='expansion'):
     """
     Apply multi-label graphcuts to grid graph. This is a simplified version of
     cut_grid_graph, with all edge weights set to 1.
@@ -593,5 +620,4 @@ def cut_grid_graph_simple(unary_cost, pairwise_cost, n_iter=-1,
     else:
         cost_diag_dr, cost_diag_dl = None, None
 
-    return cut_grid_graph(unary_cost, pairwise_cost, cost_v, cost_h,
-                          cost_diag_dr, cost_diag_dl, n_iter, algorithm)
+    return cut_grid_graph(unary_cost, pairwise_cost, cost_v, cost_h, cost_diag_dr, cost_diag_dl, n_iter, algorithm)

@@ -20,11 +20,11 @@ import os
 import sys
 
 try:
-    from setuptools import setup, Extension # , Command, find_packages
+    from setuptools import Extension, setup  # , Command, find_packages
     from setuptools.command.build_ext import build_ext
 except ImportError:
-    from distutils.core import setup, Extension # , Command, find_packages
     from distutils.command.build_ext import build_ext
+    from distutils.core import Extension, setup  # , Command, find_packages
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 PACKAGE_NAME = 'gco-v3.0.zip'
@@ -72,14 +72,12 @@ else:
     setup_reqs = ['Cython', 'numpy']
     install_reqs = _parse_requirements(os.path.join(HERE, 'requirements.txt'))
 
-
 setup(
     name='gco-wrapper',
     url='http://vision.csd.uwo.ca/code/',
     packages=['gco'],
     version='3.0.7',
     license='MIT',
-
     author='Yujia Li & A. Mueller',
     author_email='yujiali@cs.tornto.edu',
     maintainer='Jiri Borovec',
@@ -89,7 +87,6 @@ setup(
     project_urls={
         "Source Code": "https://github.com/Borda/pyGCO",
     },
-
     zip_safe=False,
     cmdclass={'build_ext': BuildExt},
     ext_modules=[
@@ -110,23 +107,23 @@ setup(
 
     # See https://PyPI.python.org/PyPI?%3Aaction=list_classifiers
     classifiers=[
-      "Development Status :: 4 - Beta",
-      "Environment :: Console",
-      "Intended Audience :: Developers",
-      "Intended Audience :: Information Technology",
-      "Intended Audience :: Education",
-      "Intended Audience :: Science/Research",
-      "License :: OSI Approved :: MIT License",
-      "Natural Language :: English",
-      # "Topic :: Scientific/Engineering :: Image Segmentation",
-      # Specify the Python versions you support here. In particular, ensure
-      # that you indicate whether you support Python 2, Python 3 or both.
-      "Programming Language :: Python :: 2",
-      "Programming Language :: Python :: 2.7",
-      "Programming Language :: Python :: 3",
-      "Programming Language :: Python :: 3.6",
-      "Programming Language :: Python :: 3.7",
-      "Programming Language :: Python :: 3.8",
-      "Programming Language :: Python :: 3.9",
+        "Development Status :: 4 - Beta",
+        "Environment :: Console",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Information Technology",
+        "Intended Audience :: Education",
+        "Intended Audience :: Science/Research",
+        "License :: OSI Approved :: MIT License",
+        "Natural Language :: English",
+        # "Topic :: Scientific/Engineering :: Image Segmentation",
+        # Specify the Python versions you support here. In particular, ensure
+        # that you indicate whether you support Python 2, Python 3 or both.
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
     ],
 )

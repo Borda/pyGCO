@@ -1,8 +1,8 @@
-import os
+import ctypes as ct
 import glob
+import os
 
 import numpy as np
-import ctypes as ct
 
 # or change this to your own path that contains libcgco.so
 _CGCO_LIB_PATH = os.path.dirname(os.path.abspath(os.path.realpath(__file__)))
@@ -35,20 +35,18 @@ _label_ptr_type = np.ctypeslib.ndpointer(dtype=np.intc)
 _energy_term_type = ct.c_int
 _energy_term_ptr_type = np.ctypeslib.ndpointer(dtype=np.intc)
 # _energy_type = ct.c_int       # if energy32 is set
-_energy_type = ct.c_longlong    # default type long long
+_energy_type = ct.c_longlong  # default type long long
 # _energy_ptr_type = np.ctypeslib.ndpointer(dtype=np.intc)
 _energy_ptr_type = np.ctypeslib.ndpointer(dtype=np.longlong)
 _success_ptr_type = np.ctypeslib.ndpointer(dtype=np.intc)
 
-_SMOOTH_COST_FN = ct.CFUNCTYPE(_energy_term_type, ct.c_int, ct.c_int,
-                               _label_id_type, _label_id_type)
+_SMOOTH_COST_FN = ct.CFUNCTYPE(_energy_term_type, ct.c_int, ct.c_int, _label_id_type, _label_id_type)
 
 # load cgco shared library
 _cgco = np.ctypeslib.load_library(_CGCO_LIB_NAME, _CGCO_LIB_PATH)
 
 # declare the functions, argument types and return types
-_cgco.gcoCreateGeneralGraph.argtypes = [_site_id_type, _label_id_type,
-                                        _handle_ptr_type]
+_cgco.gcoCreateGeneralGraph.argtypes = [_site_id_type, _label_id_type, _handle_ptr_type]
 _cgco.gcoCreateGeneralGraph.restypes = ct.c_int
 
 _cgco.gcoDestroyGraph.argtypes = [_handle_type]
@@ -57,24 +55,19 @@ _cgco.gcoDestroyGraph.restypes = ct.c_int
 _cgco.gcoSetDataCost.argtypes = [_handle_type, _energy_term_ptr_type]
 _cgco.gcoSetDataCost.restypes = ct.c_int
 
-_cgco.gcoSetSiteDataCost.argtypes = [_handle_type, _site_id_type,
-                                     _label_id_type, _energy_term_type]
+_cgco.gcoSetSiteDataCost.argtypes = [_handle_type, _site_id_type, _label_id_type, _energy_term_type]
 _cgco.gcoSetSiteDataCost.restypes = ct.c_int
 
-_cgco.gcoSetNeighborPair.argtypes = [_handle_type, _site_id_type,
-                                     _site_id_type, _energy_term_type]
+_cgco.gcoSetNeighborPair.argtypes = [_handle_type, _site_id_type, _site_id_type, _energy_term_type]
 _cgco.gcoSetNeighborPair.restypes = ct.c_int
 
-_cgco.gcoSetAllNeighbors.argtypes = [_handle_type, _site_ptr_type,
-                                     _site_ptr_type, _energy_term_ptr_type,
-                                     ct.c_int]
+_cgco.gcoSetAllNeighbors.argtypes = [_handle_type, _site_ptr_type, _site_ptr_type, _energy_term_ptr_type, ct.c_int]
 _cgco.gcoSetAllNeighbors.restypes = ct.c_int
 
 _cgco.gcoSetSmoothCost.argtypes = [_handle_type, _energy_term_ptr_type]
 _cgco.gcoSetSmoothCost.restype = ct.c_int
 
-_cgco.gcoSetPairSmoothCost.argtypes = [_handle_type, _label_id_type,
-                                       _label_id_type, _energy_term_type]
+_cgco.gcoSetPairSmoothCost.argtypes = [_handle_type, _label_id_type, _label_id_type, _energy_term_type]
 _cgco.gcoSetPairSmoothCost.restypes = ct.c_int
 
 _cgco.gcoSetSmoothCostFunction.argtypes = [_handle_type, _SMOOTH_COST_FN]
@@ -83,8 +76,7 @@ _cgco.gcoSetSmoothCostFunction.restypes = ct.c_int
 _cgco.gcoExpansion.argtypes = [_handle_type, ct.c_int, _energy_ptr_type]
 _cgco.gcoExpansion.restypes = ct.c_int
 
-_cgco.gcoExpansionOnAlpha.argtypes = [_handle_type, _label_id_type,
-                                      _success_ptr_type]
+_cgco.gcoExpansionOnAlpha.argtypes = [_handle_type, _label_id_type, _success_ptr_type]
 _cgco.gcoExpansionOnAlpha.restypes = ct.c_int
 
 _cgco.gcoSwap.argtypes = [_handle_type, ct.c_int, _energy_ptr_type]
