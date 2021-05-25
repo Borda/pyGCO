@@ -7,6 +7,7 @@ on:  # Trigger the workflow on push or pull request, but only for the main branc
     branches: [master]
 
 jobs:
+
   pytest:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -34,7 +35,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install --upgrade --requirement requirements.txt
-        pip install pytest>=3.0 pytest-cov coverage codecov check-manifest
+        pip install pytest>=3.0 pytest-cov coverage codecov
         pip list
       shell: bash
 
@@ -96,8 +97,12 @@ jobs:
       run: |
         choco install vcpython27 -f -y
 
+    - name: Check manifest
+      run: |
+        pip install check-manifest
+        python -m check_manifest
+        python setup.py check --metadata --strict
+
     - name: Try installing
       run: |
-        check-manifest
-        python setup.py check --metadata --strict
         python setup.py install
