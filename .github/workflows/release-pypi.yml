@@ -40,6 +40,9 @@ jobs:
       matrix:
         os: [ubuntu-20.04, macOS-10.15, windows-2019]
         python-version: [2.7, 3.6, 3.7, 3.8, 3.9]
+        exclude:
+          - os: windows-2019
+            python-version: 2.7
     steps:
     - uses: actions/checkout@master
     - uses: actions/setup-python@v2
@@ -50,6 +53,9 @@ jobs:
         name: pypi-packages-${{ github.sha }}
         path: dist
 
+    - name: "Install Visual C++ for Python 2.7"
+      if: runner.os == 'Windows' && matrix.python-version == 2.7
+      run: choco install vcpython27 -f -y
     - name: Install dependencies
       run: python -m pip install --user --upgrade setuptools wheel
     - name: Build wheel
