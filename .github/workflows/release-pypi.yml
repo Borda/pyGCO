@@ -33,13 +33,13 @@ jobs:
 
   build-wheels:
     runs-on: ${{ matrix.os }}
+    needs: build-sdist
     strategy:
       fail-fast: true
       max-parallel: 1
       matrix:
         os: [ubuntu-20.04, macOS-10.15, windows-2019]
-        python-version: [2.7, 3.6, 3.9]
-    needs: build-sdist
+        python-version: [2.7, 3.6, 3.7, 3.8, 3.9]
     steps:
     - uses: actions/checkout@master
     - uses: actions/setup-python@v2
@@ -49,15 +49,12 @@ jobs:
       with:
         name: pypi-packages-${{ github.sha }}
         path: dist
-    - run: ls -lh dist/
 
     - name: Install dependencies
       run: python -m pip install --user --upgrade setuptools wheel
     - name: Build wheel
-      run: |
-        # add wheel build for all OS/python
-        python setup.py bdist_wheel
-        ls -lh dist/
+      # add wheel build for all OS/python
+      run: python setup.py bdist_wheel
 
     - uses: actions/upload-artifact@v2
       with:
@@ -77,7 +74,7 @@ jobs:
       with:
         name: pypi-packages-${{ github.sha }}
         path: dist
-    - run: ls -lh dist/
+    - run: ls -l dist/
 
     # We do this, since failures on test.pypi aren't that bad
     - name: Publish to Test PyPI
@@ -92,3 +89,21 @@ jobs:
       with:
         user: __token__
         password: ${{ secrets.pypi_password }}
+
+  upload-package:
+    runs-on: ubuntu-20.04
+    needs: build-wheels
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/download-artifact@v2
+      with:
+        name: pypi-packages-${{ github.sha }}
+        path: dist
+    - run: ls -lh dist/
+
+    - name: Upload to release
+      uses: AButler/upload-release-assets@v2.0
+      if: startsWith(github.event.ref, 'refs/tags') || github.event_name == 'release'
+      with:
+        files: 'dist/*'
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
