@@ -110,4 +110,5 @@ jobs:
 
     - name: Try installing
       run: |
+        pip install "pip>=20.1" "numpy~=1.16.0" "matplotlib<3.0"
         python setup.py install
