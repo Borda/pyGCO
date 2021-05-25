@@ -30,7 +30,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install --upgrade --requirement requirements.txt
-        pip install pytest>=3.0 pytest-cov coverage codecov
+        pip install "pytest>=3.0" pytest-cov coverage codecov
         pip list
       shell: bash
 
@@ -100,7 +100,7 @@ jobs:
           - os: windows-2019
             python-version: 2.7
     # Timeout: https://stackoverflow.com/a/59076067/4521646
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -110,5 +110,5 @@ jobs:
 
     - name: Try installing
       run: |
-        pip install "pip>=20.1" "numpy~=1.16.0" "matplotlib<3.0"
+        pip install "pip>=20.1" "numpy~=1.16.0" "matplotlib>=2.0, <3.0"
         python setup.py install

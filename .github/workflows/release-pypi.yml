@@ -42,9 +42,6 @@ jobs:
         #python-version: [2.7, 3.6, 3.7, 3.8, 3.9]
     steps:
     - uses: actions/checkout@master
-    - uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
     - uses: actions/download-artifact@v2
       with:
         name: pypi-packages-${{ github.sha }}
@@ -52,6 +49,9 @@ jobs:
 
     - name: Building wheels
       uses: pypa/cibuildwheel@v1.11.0
+      env:
+        # Disable building PyPy wheels on all platforms
+        CIBW_SKIP: pp*
       with:
         output-dir: dist
 
