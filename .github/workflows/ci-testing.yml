@@ -27,11 +27,6 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: "Install Visual C++ for Python 2.7"
-      if: runner.os == 'Windows' && matrix.python-version == 2.7
-      run: |
-        choco install vcpython27 -f -y
-
     - name: Install dependencies
       run: |
         pip install --upgrade --requirement requirements.txt
@@ -76,6 +71,24 @@ jobs:
         flags: pytest,python${{ matrix.python-version }}
         fail_ci_if_error: false
 
+  package:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+
+    - name: Install require
+      run: |
+        pip install "pip>=20.1"
+        pip install check-manifest
+
+    - name: Check manifest
+      run: |
+        python -m check_manifest
+        python setup.py check --metadata --strict
+
   install:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -83,6 +96,9 @@ jobs:
       matrix:
         os: [ubuntu-20.04, macOS-10.15, windows-2019]
         python-version: [2.7, 3.6, 3.9]
+        exclude:
+          - os: windows-2019
+            python-version: 2.7
     # Timeout: https://stackoverflow.com/a/59076067/4521646
     timeout-minutes: 5
     steps:
@@ -91,17 +107,6 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-
-    - name: "Install Visual C++ for Python 2.7"
-      if: runner.os == 'Windows' && matrix.python-version == 2.7
-      run: |
-        choco install vcpython27 -f -y
-
-    - name: Check manifest
-      run: |
-        pip install check-manifest
-        python -m check_manifest
-        python setup.py check --metadata --strict
 
     - name: Try installing
       run: |
