@@ -10,6 +10,7 @@ recursive-include gco_source *.cpp
 exclude test_*.py
 exclude test_*.cpp
 exclude *.yml
+exclude *.yaml
 exclude Makefile
 
 prune images
