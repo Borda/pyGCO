@@ -5,9 +5,11 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/gco-wrapper)](https://pypi.org/project/gco-wrapper/)
 [![PyPI Status](https://badge.fury.io/py/gco-wrapper.svg)](https://badge.fury.io/py/gco-wrapper)
 [![PyPI Status](https://pepy.tech/badge/gco-wrapper)](https://pepy.tech/project/gco-wrapper)
+
 ![CI testing](https://github.com/Borda/pyGCO/workflows/CI%20testing/badge.svg?branch=master&event=push)
 [![codecov](https://codecov.io/gh/Borda/pyGCO/branch/master/graph/badge.svg)](https://codecov.io/gh/Borda/pyGCO)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4b875e6fbf3349e18a139a2a005736a4)](https://www.codacy.com/app/Borda/pyGCO?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Borda/pyGCO&amp;utm_campaign=Badge_Grade)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Borda/pyGCO/master.svg)](https://results.pre-commit.ci/latest/github/Borda/pyGCO/master)
 
 <!--
 [![Maintainability](https://api.codeclimate.com/v1/badges/9c11485e2f4f23189069/maintainability)](https://codeclimate.com/github/Borda/pyGCO/maintainability)
