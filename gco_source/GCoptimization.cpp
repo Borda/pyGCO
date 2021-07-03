@@ -75,7 +75,7 @@ void slist_prepend(T*& head, T* val)
 }
 
 
-void GCException::Report() 
+void GCException::Report()
 {
 	printf("\n%s\n",message);
 	exit(0);
@@ -86,8 +86,8 @@ void GCException::Report()
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //   First we have functions for the base class
 /////////////////////////////////////////////////////////////////////////////////////////////////
-// Constructor for base class                                                       
-GCoptimization::GCoptimization(SiteID nSites, LabelID nLabels) 
+// Constructor for base class
+GCoptimization::GCoptimization(SiteID nSites, LabelID nLabels)
 : m_num_labels(nLabels)
 , m_num_sites(nSites)
 , m_datacostIndividual(0)
@@ -123,7 +123,7 @@ GCoptimization::GCoptimization(SiteID nSites, LabelID nLabels)
 {
 	if ( nLabels <= 1 ) handleError("Number of labels must be >= 2");
 	if ( nSites <= 0 )  handleError("Number of sites must be >= 1");
-	
+
 	if ( !m_lookupSiteVar || !m_labelTable || !m_labeling ){
 		if (m_lookupSiteVar) delete [] m_lookupSiteVar;
 		if (m_labelTable) delete [] m_labelTable;
@@ -132,7 +132,7 @@ GCoptimization::GCoptimization(SiteID nSites, LabelID nLabels)
 		if (m_labelCounts) delete [] m_labelCounts;
 		handleError("Not enough memory.");
 	}
-	
+
 	memset(m_labeling, 0, m_num_sites*sizeof(LabelID));
 	memset(m_lookupSiteVar,-1,m_num_sites*sizeof(SiteID));
 	setLabelOrder(false);
@@ -267,7 +267,7 @@ GCoptimization::EnergyType GCoptimization::giveSmoothEnergyInternal()
 		for ( n = 0; n < numN; n++ )
 		{
 			nSite = nPointer[n];
-			if ( nSite < i ) 
+			if ( nSite < i )
 				eng += weights[n]*(sc->compute(i,nSite,m_labeling[i],m_labeling[nSite]));
 		}
 	}
@@ -347,10 +347,10 @@ void GCoptimization::setupSmoothCostsExpansion(SiteID size,LabelID alpha_label,E
 		for ( n = 0; n < nNum; n++ )
 		{
 			nSite = nPointer[n];
-			if ( m_lookupSiteVar[nSite] == -1 ) 
+			if ( m_lookupSiteVar[nSite] == -1 )
 				addterm1_checked(e,i,sc->compute(site,nSite,alpha_label,m_labeling[nSite]),
 				                     sc->compute(site,nSite,m_labeling[site],m_labeling[nSite]),weights[n]);
-			else if ( nSite < site ) 
+			else if ( nSite < site )
 			{
 				addterm2_checked(e,i,m_lookupSiteVar[nSite],
 				                 sc->compute(site,nSite,alpha_label,alpha_label),
@@ -507,7 +507,7 @@ bool GCoptimization::solveSpecialCases(EnergyType& energy)
 			if ( lc->numLabels > 1)
 				break;
 		if ( !lc ) {
-			// Special case: Data costs and per-label costs 
+			// Special case: Data costs and per-label costs
 			energy = solveGreedy<DataCostT>();
 			return true;
 		}
@@ -542,9 +542,9 @@ public:
 	OLGA_INLINE SiteID site()  const { return m_site.site(); }
 	OLGA_INLINE SiteID label() const { return *m_label; }
 	OLGA_INLINE bool   done()  const { return m_label >= m_labelend; }
-	OLGA_INLINE GreedyIter& operator++() 
+	OLGA_INLINE GreedyIter& operator++()
 	{
-		// The inner loop is over sites, not labels, because sparse data costs 
+		// The inner loop is over sites, not labels, because sparse data costs
 		// are stored as consecutive [sparse] SiteIDs with respect to each label.
 		if (++m_site == m_siteend) {
 			while (++m_label < m_labelend) {
@@ -592,7 +592,7 @@ GCoptimization::EnergyType GCoptimization::solveGreedy()
 		GreedyIter<DataCostT> iter(*dc,m_num_sites);
 		LabelID alpha = 0;
 
-		// Treat first iteration as special case. 
+		// Treat first iteration as special case.
 		// Ignore current labeling and just find the greedy initial label.
 		for ( LabelID l = 0; l < m_num_labels; ++l ) {
 			e[l] = 0;
@@ -605,7 +605,7 @@ GCoptimization::EnergyType GCoptimization::solveGreedy()
 				if ( dataCost > GCO_MAX_ENERGYTERM )
 					handleError("Data cost was larger than GCO_MAX_ENERGYTERM; danger of integer overflow.");
 				e[l] += dataCost;
-				if ( e[l] > e[alpha] ) // break out early if this will definitely 
+				if ( e[l] > e[alpha] ) // break out early if this will definitely
 					break;             // not be a good label to start from
 			}
 			if ( e[l] < e[alpha] ) // choose alpha with minimum energy e[alpha]
@@ -714,7 +714,7 @@ GCoptimization::EnergyType GCoptimization::solveGreedy()
 
 //------------------------------------------------------------------
 
-void GCoptimization::setDataCost(DataCostFn fn) { 
+void GCoptimization::setDataCost(DataCostFn fn) {
 	specializeDataCostFunctor(DataCostFnFromFunction(fn));
 	m_labelingInfoDirty = true;
 }
@@ -722,7 +722,7 @@ void GCoptimization::setDataCost(DataCostFn fn) {
 
 //------------------------------------------------------------------
 
-void GCoptimization::setDataCost(DataCostFnExtra fn, void *extraData) { 
+void GCoptimization::setDataCost(DataCostFnExtra fn, void *extraData) {
 	specializeDataCostFunctor(DataCostFnFromFunctionExtra(fn, extraData));
 	m_labelingInfoDirty = true;
 }
@@ -811,7 +811,7 @@ void GCoptimization::setSmoothCost(LabelID l1, LabelID l2, EnergyTermType e){
 		memset(table, 0, m_num_labels*m_num_labels*sizeof(EnergyTermType));
 		specializeSmoothCostFunctor(SmoothCostFnFromArray(table, m_num_labels));
 		m_smoothcostIndividual = table;
-	} 
+	}
 	m_smoothcostIndividual[l1*m_num_labels + l2] = e;
 }
 
@@ -834,7 +834,7 @@ void GCoptimization::setSmoothCostFunctor(SmoothCostFunctor* f) {
 
 //-------------------------------------------------------------------
 
-void GCoptimization::setLabelCost(EnergyTermType cost) 
+void GCoptimization::setLabelCost(EnergyTermType cost)
 {
 	EnergyTermType* lc = new EnergyTermType[m_num_labels];
 	for ( LabelID i = 0; i < m_num_labels; ++i )
@@ -845,7 +845,7 @@ void GCoptimization::setLabelCost(EnergyTermType cost)
 
 //-------------------------------------------------------------------
 
-void GCoptimization::setLabelCost(EnergyTermType *costArray) 
+void GCoptimization::setLabelCost(EnergyTermType *costArray)
 {
 	for ( LabelID i = 0; i < m_num_labels; ++i )
 		setLabelSubsetCost(&i, 1, costArray[i]);
@@ -878,14 +878,14 @@ void GCoptimization::setLabelSubsetCost(LabelID* labels, LabelID numLabels, Ener
 			}
 		}
 	}
-	
+
 	if (cost == 0)
 		return;
 
 	// Create a new LabelCost entry and add it to the appropriate lists
 	m_labelcostCount++;
 	LabelCost* lc = new LabelCost;
-	lc->cost = cost; 
+	lc->cost = cost;
 	lc->active = false;
 	lc->aux = -1;
 	lc->numLabels = numLabels;
@@ -894,7 +894,7 @@ void GCoptimization::setLabelSubsetCost(LabelID* labels, LabelID numLabels, Ener
 	slist_prepend(m_labelcostsAll, lc);
 	for ( LabelID i = 0; i < numLabels; ++i ) {
 		LabelCostIter* lci = new LabelCostIter;
-		lci->node = lc; 
+		lci->node = lc;
 		slist_prepend(m_labelcostsByLabel[labels[i]], lci);
 	}
 }
@@ -912,7 +912,7 @@ void GCoptimization::whatLabel(SiteID start, SiteID count, LabelID* labeling)
 GCoptimization::EnergyType GCoptimization::giveSmoothEnergy()
 {
 	finalizeNeighbors();
-	if ( m_giveSmoothEnergyInternal ) 
+	if ( m_giveSmoothEnergyInternal )
 		return( (this->*m_giveSmoothEnergyInternal)());
 	return 0;
 }
@@ -939,7 +939,7 @@ GCoptimization::EnergyType GCoptimization::giveLabelEnergy()
 }
 
 //-------------------------------------------------------------------
- 
+
 GCoptimization::EnergyType GCoptimization::compute_energy()
 {
 	return giveDataEnergy() + giveSmoothEnergy() + giveLabelEnergy();
@@ -971,7 +971,7 @@ GCoptimization::EnergyType GCoptimization::expansion(int max_num_iterations)
 	permuteLabelTable();
 	updateLabelingInfo();
 
-	try 
+	try
 	{
 		if ( max_num_iterations == -1 )
 		{
@@ -985,13 +985,13 @@ GCoptimization::EnergyType GCoptimization::expansion(int max_num_iterations)
 			do
 			{
 				gcoclock_t ticks0 = gcoclock();
-				m_stepsThisCycle = 0; 
+				m_stepsThisCycle = 0;
 
 				// Make a pass over the unchecked labels in the current queue, i.e. m_labelTable[next..queueSize-1]
 				LabelID queueSize = queueSizes.back();
 				LabelID start = next;
 				m_stepsThisCycleTotal = queueSize - start;
-				do 
+				do
 				{
 					if ( !alpha_expansion(m_labelTable[next]) )
 						std::swap(m_labelTable[next],m_labelTable[--queueSize]); // don't put this label in a new queue
@@ -1012,7 +1012,7 @@ GCoptimization::EnergyType GCoptimization::expansion(int max_num_iterations)
 				}
 				else
 					next = 0;  // All expansions were successful, so do another complete sweep
-				
+
 				printStatus1(cycle++,false,ticks0);
 			} while ( !queueSizes.empty() );
 			new_energy = compute_energy();
@@ -1034,7 +1034,7 @@ GCoptimization::EnergyType GCoptimization::expansion(int max_num_iterations)
 				permuteLabelTable();
 			}
 		}
-	} 
+	}
 	catch (const GCException& exception)
 	{
 		m_stepsThisCycle = m_stepsThisCycleTotal = 0;
@@ -1085,7 +1085,7 @@ void GCoptimization::checkInterrupt()
 
 
 //-------------------------------------------------------------------//
-//                  METHODS for EXPANSION MOVES                      //  
+//                  METHODS for EXPANSION MOVES                      //
 //-------------------------------------------------------------------//
 
 GCoptimization::EnergyType GCoptimization::setupLabelCostsExpansion(SiteID size,LabelID alpha_label,EnergyT *e,SiteID *activeSites)
@@ -1121,7 +1121,7 @@ GCoptimization::EnergyType GCoptimization::setupLabelCostsExpansion(SiteID size,
 	for ( LabelCostIter* lci = m_labelcostsByLabel[alpha_label]; lci; lci = lci->next )
 		lci->node->aux = DISABLE;
 
-	// Since we're explicitly omitting the alpha_label label costs from the binary energy, 
+	// Since we're explicitly omitting the alpha_label label costs from the binary energy,
 	// calculate what it would have been, so that we can potentially reject the expansion afterwards.
 	if ( !m_labelCounts[alpha_label] )
 	{
@@ -1134,14 +1134,14 @@ GCoptimization::EnergyType GCoptimization::setupLabelCostsExpansion(SiteID size,
 	for ( SiteID i = 0; i < size; i++ )
 	{
 		LabelID label_i = m_labeling[activeSites[i]];
-		for ( LabelCostIter* lci = m_labelcostsByLabel[label_i]; lci; lci = lci->next ) 
+		for ( LabelCostIter* lci = m_labelcostsByLabel[label_i]; lci; lci = lci->next )
 		{
 			LabelCost* lc = lci->node;
 			if ( lc->aux == DISABLE )
 				continue;
 
 			// Add auxiliary variable if necessary, and add pairwise potential
-			if ( lc->aux == UNINIT ) 
+			if ( lc->aux == UNINIT )
 			{
 				lc->aux = e->add_variable();
 				e->add_term1(lc->aux,0,lc->cost);
@@ -1177,9 +1177,9 @@ void GCoptimization::updateLabelingInfo(bool updateCounts, bool updateActive, bo
 				lc->active = false;
 
 			EnergyType energy = 0;
-			for ( LabelID l = 0; l < m_num_labels; ++l ) 
+			for ( LabelID l = 0; l < m_num_labels; ++l )
 				if ( m_labelCounts[l] )
-					for ( LabelCostIter* lci = m_labelcostsByLabel[l]; lci; lci = lci->next ) 
+					for ( LabelCostIter* lci = m_labelcostsByLabel[l]; lci; lci = lci->next )
 						lci->node->active = true;
 		}
 	}
@@ -1212,7 +1212,7 @@ bool GCoptimization::alpha_expansion(LabelID alpha_label)
 	SiteID size = 0;
 	SiteID *activeSites = new SiteID[m_num_sites];
 	EnergyType afterExpansionEnergy = 0;
-	try 
+	try
 	{
 		// Get list of active sites based on alpha and current labeling
 		if ( m_queryActiveSitesExpansion )
@@ -1250,7 +1250,7 @@ bool GCoptimization::alpha_expansion(LabelID alpha_label)
 			m_lookupSiteVar[activeSites[i]] = -1; // restore m_lookupSite to all -1s
 
 		printStatus2(alpha_label,-1,size,ticks0);
-	} 
+	}
 	catch (const GCException& exception)
 	{
 		delete [] activeSites;
@@ -1276,7 +1276,7 @@ GCoptimization::EnergyType GCoptimization::oneExpansionIteration()
 }
 
 //-------------------------------------------------------------------//
-//                  METHODS for SWAP MOVES                           //  
+//                  METHODS for SWAP MOVES                           //
 //-------------------------------------------------------------------//
 
 GCoptimization::EnergyType GCoptimization::swap(int max_num_iterations)
@@ -1284,7 +1284,7 @@ GCoptimization::EnergyType GCoptimization::swap(int max_num_iterations)
 	EnergyType new_energy,old_energy;
 	if ( (this->*m_solveSpecialCases)(new_energy) )
 		return new_energy;
-	
+
 	new_energy = compute_energy();
 	old_energy = new_energy+1;
 	printStatus1("starting alpha/beta-swap");
@@ -1303,7 +1303,7 @@ GCoptimization::EnergyType GCoptimization::swap(int max_num_iterations)
 			printStatus1(curr_cycle,true,ticks0);
 			curr_cycle++;
 		}
-	} 
+	}
 	catch (const GCException& exception)
 	{
 		m_stepsThisCycle = m_stepsThisCycleTotal = 0;
@@ -1326,7 +1326,7 @@ GCoptimization::EnergyType GCoptimization::oneSwapIteration()
 		for (next1 = m_num_labels - 1;  next1 >= 0;  next1-- )
 			if ( m_labelTable[next] < m_labelTable[next1] )
 			{
-				alpha_beta_swap(m_labelTable[next],m_labelTable[next1]); 
+				alpha_beta_swap(m_labelTable[next],m_labelTable[next1]);
 				m_stepsThisCycle++;
 			}
 
@@ -1374,7 +1374,7 @@ void GCoptimization::alpha_beta_swap(LabelID alpha_label, LabelID beta_label)
 		checkInterrupt();
 		e.minimize();
 		checkInterrupt();
-		
+
 		// Apply the new labeling
 		for ( SiteID i = 0; i < size; i++ )
 		{
@@ -1382,7 +1382,7 @@ void GCoptimization::alpha_beta_swap(LabelID alpha_label, LabelID beta_label)
 			m_lookupSiteVar[activeSites[i]] = -1; // restore lookupSiteVar to all -1s
 		}
 		m_labelingInfoDirty = true;
-	} 
+	}
 	catch (const GCException& exception)
 	{
 		delete [] activeSites;
@@ -1489,7 +1489,7 @@ void GCoptimizationGridGraph::giveNeighborInfo(SiteID site, SiteID *numSites, Si
 {
 	*numSites  = m_numNeighbors[site];
 	*neighbors = &m_neighbors[site*4];
-	
+
 	if (m_weightedGraph) *weights  = &m_neighborsWeights[site*4];
 	else *weights = m_unityWeights;
 }
@@ -1500,7 +1500,7 @@ void GCoptimizationGridGraph::computeNeighborWeights(EnergyTermType *vCosts,Ener
 {
 	SiteID i,n,nSite;
 	GCoptimization::EnergyTermType weight;
-	
+
 	m_neighborsWeights = new EnergyTermType[m_num_sites*4];
 
 	for ( i = 0; i < m_num_sites; i++ )
@@ -1512,7 +1512,7 @@ void GCoptimizationGridGraph::computeNeighborWeights(EnergyTermType *vCosts,Ener
 			else if (i-nSite == -1 )       weight = hCosts[i];
 			else if ( i-nSite == m_width ) weight = vCosts[nSite];
 			else if (i-nSite == -m_width ) weight = vCosts[i];
-	
+
 			m_neighborsWeights[i*4+n] = weight;
 		}
 	}
@@ -1539,7 +1539,7 @@ GCoptimizationGeneralGraph::GCoptimizationGeneralGraph(SiteID num_sites,LabelID 
 
 GCoptimizationGeneralGraph::~GCoptimizationGeneralGraph()
 {
-		
+
 	if ( m_neighbors )
 		delete [] m_neighbors;
 
@@ -1573,13 +1573,13 @@ void GCoptimizationGeneralGraph::finalizeNeighbors()
 
 	EnergyTermType *tempWeights = new EnergyTermType[m_num_sites];
 	SiteID *tempIndexes         = new SiteID[m_num_sites];
-	
+
 	if ( !tempWeights || !tempIndexes ) handleError("Not enough memory");
 
 	m_numNeighbors     = new SiteID[m_num_sites];
 	m_neighborsIndexes = new SiteID*[m_num_sites];
 	m_neighborsWeights = new EnergyTermType*[m_num_sites];
-	
+
 	if ( !m_numNeighbors || !m_neighborsIndexes || !m_neighborsWeights ) handleError("Not enough memory.");
 
 	for ( site = 0; site < m_num_sites; site++ )
@@ -1588,7 +1588,7 @@ void GCoptimizationGeneralGraph::finalizeNeighbors()
 		{
 			m_neighbors[site].setCursorFront();
 			count = 0;
-			
+
 			while ( m_neighbors[site].hasNext() )
 			{
 				tmp = (Neighbor *) (m_neighbors[site].next());
@@ -1601,9 +1601,9 @@ void GCoptimizationGeneralGraph::finalizeNeighbors()
 			m_numNeighborsTotal     += count;
 			m_neighborsIndexes[site] = new SiteID[count];
 			m_neighborsWeights[site] = new EnergyTermType[count];
-			
+
 			if ( !m_neighborsIndexes[site] || !m_neighborsWeights[site] ) handleError("Not enough memory.");
-			
+
 			for ( i = 0; i < count; i++ )
 			{
 				m_neighborsIndexes[site][i] = tempIndexes[i];
@@ -1623,7 +1623,7 @@ void GCoptimizationGeneralGraph::finalizeNeighbors()
 }
 //------------------------------------------------------------------------------
 
-void GCoptimizationGeneralGraph::giveNeighborInfo(SiteID site, SiteID *numSites, 
+void GCoptimizationGeneralGraph::giveNeighborInfo(SiteID site, SiteID *numSites,
 												  SiteID **neighbors, EnergyTermType **weights)
 {
 	if (m_numNeighbors) {
@@ -1664,7 +1664,7 @@ void GCoptimizationGeneralGraph::setNeighbors(SiteID site1, SiteID site2, Energy
 
 	m_neighbors[site1].addFront(temp1);
 	m_neighbors[site2].addFront(temp2);
-	
+
 }
 //------------------------------------------------------------------
 
@@ -1694,8 +1694,8 @@ void GCoptimization::printStatus1(const char* extraMsg)
 	if ( extraMsg )
 		printf("gco>> %s\n",extraMsg);
 	printf("gco>> initial energy: \tE=%lld (E=%lld+%lld+%lld)\n",(long long)compute_energy(),
-		(long long)giveDataEnergy(), (long long)giveSmoothEnergy(), (long long)giveLabelEnergy()); 
-	flushnow(); 
+		(long long)giveDataEnergy(), (long long)giveSmoothEnergy(), (long long)giveLabelEnergy());
+	flushnow();
 }
 
 void GCoptimization::printStatus1(int cycle, bool isSwap, gcoclock_t ticks0)
@@ -1715,7 +1715,7 @@ void GCoptimization::printStatus1(int cycle, bool isSwap, gcoclock_t ticks0)
 		printf(" \t%d ms",ms);
 	}
 	printf("\n");
-	flushnow(); 
+	flushnow();
 }
 
 void GCoptimization::printStatus2(int alpha, int beta, int numVars, gcoclock_t ticks0)
@@ -1788,7 +1788,7 @@ void GCoptimization::DataCostFnSparse::set(LabelID l, const SparseDataCost* cost
 	memcpy(next,costs,count*sizeof(SparseDataCost));
 
 	//
-	// Scan the list of costs and remember pointers to delimit the 'buckets', i.e. where 
+	// Scan the list of costs and remember pointers to delimit the 'buckets', i.e. where
 	// ranges of SiteIDs lie along the array. Buckets can be empty (begin == end).
 	//
 	const SparseDataCost* end  = next+count;
@@ -1827,7 +1827,7 @@ GCoptimization::EnergyTermType GCoptimization::DataCostFnSparse::search(DataCost
 			return mid->cost;  // found it!
 		}
 	} while (R - L > cLinearSearchSize);
-	
+
 	// Finish off with linear search over the remaining elements
 	//
 	do {
@@ -1853,7 +1853,7 @@ OLGA_INLINE GCoptimization::EnergyTermType GCoptimization::DataCostFnSparse::com
 		// Check for correct prediction
 		if (b.predict->site == s)
 			return (b.predict++)->cost; // predict++ for next time
-		
+
 		// If the requested site is missing from the site ids near 'predict'
 		// then we know it doesn't exist in the bucket, so return INF
 		if (b.predict->site > s && b.predict > b.begin && (b.predict-1)->site < s)
@@ -1876,4 +1876,3 @@ GCoptimization::SiteID GCoptimization::DataCostFnSparse::queryActiveSitesExpansi
 	}
 	return count;
 }
-

@@ -5,18 +5,18 @@ int main()
 {
     int handle;
     int unary[4][3] = {
-        {2, 8, 8}, 
-        {7, 3, 7}, 
+        {2, 8, 8},
+        {7, 3, 7},
         {8, 8, 2},
         {6, 4, 6}
-    }; 
+    };
 
     int edge1[3] = {0, 1, 2};
     int edge2[3] = {1, 2, 3};
     int edge_weight[3] = {3, 10, 1};
     int smooth_cost[3][3] = {
-        {0, 1, 1}, 
-        {1, 0, 1}, 
+        {0, 1, 1},
+        {1, 0, 1},
         {1, 1, 0}
     };
     int n_sites = 4, n_labels = 3, n_edges = 3;
@@ -35,7 +35,7 @@ int main()
 
     gcoSetAllNeighbors(handle, edge1, edge2, edge_weight, n_edges);
     gcoSetSmoothCost(handle, (int*)smooth_cost);
-    
+
     /*
     unary[0][0] = 12345;
     unary[1][0] = 23456;

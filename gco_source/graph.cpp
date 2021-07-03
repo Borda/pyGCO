@@ -7,7 +7,7 @@
 #include "graph.h"
 
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 	Graph<captype, tcaptype, flowtype>::Graph(int node_num_max, int edge_num_max, void (*err_function)(const char *))
 	: node_num(0),
 	  nodeptr_block(NULL),
@@ -29,36 +29,36 @@ template <typename captype, typename tcaptype, typename flowtype>
 	flow = 0;
 }
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 	Graph<captype,tcaptype,flowtype>::~Graph()
 {
-	if (nodeptr_block) 
-	{ 
-		delete nodeptr_block; 
-		nodeptr_block = NULL; 
+	if (nodeptr_block)
+	{
+		delete nodeptr_block;
+		nodeptr_block = NULL;
 	}
 	free(nodes);
 	free(arcs);
 }
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 	void Graph<captype,tcaptype,flowtype>::reset()
 {
 	node_last = nodes;
 	arc_last = arcs;
 	node_num = 0;
 
-	if (nodeptr_block) 
-	{ 
-		delete nodeptr_block; 
-		nodeptr_block = NULL; 
+	if (nodeptr_block)
+	{
+		delete nodeptr_block;
+		nodeptr_block = NULL;
 	}
 
 	maxflow_iteration = 0;
 	flow = 0;
 }
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 	void Graph<captype,tcaptype,flowtype>::reallocate_nodes(int num)
 {
 	int node_num_max = (int)(node_max - nodes);
@@ -82,7 +82,7 @@ template <typename captype, typename tcaptype, typename flowtype>
 	}
 }
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 	void Graph<captype,tcaptype,flowtype>::reallocate_arcs()
 {
 	int arc_num_max = (int)(arc_max - arcs);
@@ -111,4 +111,3 @@ template <typename captype, typename tcaptype, typename flowtype>
 		}
 	}
 }
-

@@ -14,7 +14,7 @@ void LinkedBlockList::addFront(ListType item) {
 		m_head            = tmp;
 		m_head_block_size = 0;
 	}
-	
+
 	m_head ->m_item[m_head_block_size] = item;
 	m_head_block_size++;
 }
@@ -55,7 +55,7 @@ LinkedBlockList::~LinkedBlockList()
 {
 	LLBlock *tmp;
 
-	while ( m_head != 0 ) 
+	while ( m_head != 0 )
 	{
 		tmp = m_head;
 		m_head = m_head->m_next;
@@ -64,4 +64,3 @@ LinkedBlockList::~LinkedBlockList()
 };
 
 /*********************************************************************/
-

@@ -5,9 +5,9 @@
 	This software implements an energy minimization technique described in
 
 	What Energy Functions can be Minimized via Graph Cuts?
-	Vladimir Kolmogorov and Ramin Zabih. 
-	To appear in IEEE Transactions on Pattern Analysis and Machine Intelligence (PAMI). 
-	Earlier version appeared in European Conference on Computer Vision (ECCV), May 2002. 
+	Vladimir Kolmogorov and Ramin Zabih.
+	To appear in IEEE Transactions on Pattern Analysis and Machine Intelligence (PAMI).
+	Earlier version appeared in European Conference on Computer Vision (ECCV), May 2002.
 
 	More specifically, it computes the global minimum of a function E of binary
 	variables x_1, ..., x_n which can be written as a sum of terms involving
@@ -19,7 +19,7 @@
 
 	The method works only if each term is "regular". Definitions of regularity
 	for terms E^{i}, E^{i,j}, E^{i,j,k} are given below as comments to functions
-	add_term1(), add_term2(), add_term3(). 
+	add_term1(), add_term2(), add_term3().
 
 	This software can be used only for research purposes. IF YOU USE THIS SOFTWARE,
 	YOU SHOULD CITE THE AFOREMENTIONED PAPER IN ANY RESULTING PUBLICATION.
@@ -41,7 +41,7 @@
 	{
 		// Minimize the following function of 3 binary variables:
 		// E(x, y, z) = x - 2*y + 3*(1-z) - 4*x*y + 5*|y-z|
-		   
+
 		Energy::Var varx, vary, varz;
 		Energy *e = new Energy();
 
@@ -49,7 +49,7 @@
 		vary = e -> add_variable();
 		varz = e -> add_variable();
 
-		e -> add_term1(varx, 0, 1);  // add term x 
+		e -> add_term1(varx, 0, 1);  // add term x
 		e -> add_term1(vary, 0, -2); // add term -2*y
 		e -> add_term1(varz, 3, 0);  // add term 3*(1-z)
 
@@ -57,7 +57,7 @@
 		e -> add_term2(y, z, 0, 5, 5, 0); // add term 5*|y-z|
 
 		Energy::TotalValue Emin = e -> minimize();
-		
+
 		printf("Minimum = %d\n", Emin);
 		printf("Optimal solution:\n");
 		printf("x = %d\n", e->get_var(varx));
@@ -183,36 +183,36 @@ private:
 /************************  Implementation ******************************/
 /***********************************************************************/
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 inline Energy<captype,tcaptype,flowtype>::Energy(int var_num_max, int edge_num_max, void (*err_function)(const char *)) : Graph<captype,tcaptype,flowtype>(var_num_max, edge_num_max, err_function)
 {
 	Econst = 0;
 	error_function = err_function;
 }
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 inline Energy<captype,tcaptype,flowtype>::~Energy() {}
 
-template <typename captype, typename tcaptype, typename flowtype> 
-inline typename Energy<captype,tcaptype,flowtype>::Var Energy<captype,tcaptype,flowtype>::add_variable(int num) 
+template <typename captype, typename tcaptype, typename flowtype>
+inline typename Energy<captype,tcaptype,flowtype>::Var Energy<captype,tcaptype,flowtype>::add_variable(int num)
 {	return GraphT::add_node(num); }
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 inline void Energy<captype,tcaptype,flowtype>::add_constant(Value A) { Econst += A; }
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 inline void Energy<captype,tcaptype,flowtype>::add_term1(Var x,
                               Value A, Value B)
 {
 	this->add_tweights(x, B, A);
 }
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 inline void Energy<captype,tcaptype,flowtype>::add_term2(Var x, Var y,
                               Value A, Value B,
                               Value C, Value D)
 {
-	/* 
+	/*
 	   E = A A  +  0   B-A
 	       D D     C-D 0
 	   Add edges for the first term
@@ -252,7 +252,7 @@ inline void Energy<captype,tcaptype,flowtype>::add_term2(Var x, Var y,
 	}
 }
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 inline void Energy<captype,tcaptype,flowtype>::add_term3(Var x, Var y, Var z,
                               Value E000, Value E001,
                               Value E010, Value E011,
@@ -320,11 +320,11 @@ inline void Energy<captype,tcaptype,flowtype>::add_term3(Var x, Var y, Var z,
 	}
 }
 
-template <typename captype, typename tcaptype, typename flowtype> 
-inline typename Energy<captype,tcaptype,flowtype>::TotalValue Energy<captype,tcaptype,flowtype>::minimize() { 
+template <typename captype, typename tcaptype, typename flowtype>
+inline typename Energy<captype,tcaptype,flowtype>::TotalValue Energy<captype,tcaptype,flowtype>::minimize() {
 return Econst + GraphT::maxflow(); }
 
-template <typename captype, typename tcaptype, typename flowtype> 
+template <typename captype, typename tcaptype, typename flowtype>
 inline int Energy<captype,tcaptype,flowtype>::get_var(Var x) { return (int) this->what_segment(x); }
 
 #endif

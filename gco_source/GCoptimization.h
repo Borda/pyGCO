@@ -20,36 +20,36 @@
         Y. Boykov, O. Veksler, R.Zabih. IEEE TPAMI, 20(12):1222-1239, Nov 2001.
 
     [2] What Energy Functions can be Minimized via Graph Cuts?
-        V. Kolmogorov, R.Zabih. IEEE TPAMI, 26(2):147-159, Feb 2004. 
+        V. Kolmogorov, R.Zabih. IEEE TPAMI, 26(2):147-159, Feb 2004.
 
-    [3] An Experimental Comparison of Min-Cut/Max-Flow Algorithms for 
-        Energy Minimization in Vision. Y. Boykov, V. Kolmogorov. 
+    [3] An Experimental Comparison of Min-Cut/Max-Flow Algorithms for
+        Energy Minimization in Vision. Y. Boykov, V. Kolmogorov.
         IEEE TPAMI, 26(9):1124-1137, Sep 2004.
 
   Furthermore, if you use the label cost feature (setLabelCost), you should cite
 
-    [4] Fast Approximate Energy Minimization with Label Costs. 
-        A. Delong, A. Osokin, H. N. Isack, Y. Boykov. In CVPR, June 2010. 
+    [4] Fast Approximate Energy Minimization with Label Costs.
+        A. Delong, A. Osokin, H. N. Isack, Y. Boykov. In CVPR, June 2010.
 
-  This software can be used only for research purposes. For commercial purposes, 
+  This software can be used only for research purposes. For commercial purposes,
   be aware that there is a US patent on the main algorithm itself:
 
         R. Zabih, Y. Boykov, O. Veksler,
         "System and method for fast approximate energy minimization via graph cuts",
         United Stated Patent 6,744,923, June 1, 2004
 
-  Together with this library implemented by O. Veksler, we provide, with the 
+  Together with this library implemented by O. Veksler, we provide, with the
   permission of the V. Kolmogorov and Y. Boykov, the following two libraries:
 
   1) energy.h
-     Developed by V. Kolmogorov, this implements the binary energy minimization 
-     technique described in [2] above. We use this to implement the binary 
-     energy minimization step for the alpha-expansion and swap algorithms. 
-     The graph construction provided by "energy.h" is more efficient than 
+     Developed by V. Kolmogorov, this implements the binary energy minimization
+     technique described in [2] above. We use this to implement the binary
+     energy minimization step for the alpha-expansion and swap algorithms.
+     The graph construction provided by "energy.h" is more efficient than
      the original graph construction for alpha-expansion described in [1].
 
-     Again, this software can be used only for research purposes. IF YOU USE 
-     THIS SOFTWARE (energy.h), YOU SHOULD CITE THE AFOREMENTIONED PAPER [2] 
+     Again, this software can be used only for research purposes. IF YOU USE
+     THIS SOFTWARE (energy.h), YOU SHOULD CITE THE AFOREMENTIONED PAPER [2]
      IN ANY RESULTING PUBLICATION.
 
   2) maxflow.cpp, graph.cpp, graph.h, block.h
@@ -67,19 +67,19 @@
     Copyright 2007-2010 Olga Veksler  <olga@csd.uwo.ca>
                         Andrew Delong <andrew.delong@gmail.com>
 
-    This software and its modifications can be used and distributed for 
+    This software and its modifications can be used and distributed for
     research purposes only. Publications resulting from use of this code
     must cite publications according to the rules given above. Only
     Olga Veksler has the right to redistribute this code, unless expressed
-    permission is given otherwise. Commercial use of this code, any of 
-    its parts, or its modifications is not permited. The copyright notices 
-    must not be removed in case of any modifications. This Licence 
-    commences on the date it is electronically or physically delivered 
-    to you and continues in effect unless you fail to comply with any of 
-    the terms of the License and fail to cure such breach within 30 days 
-    of becoming aware of the breach, in which case the Licence automatically 
-    terminates. This Licence is governed by the laws of Canada and all 
-    disputes arising from or relating to this Licence must be brought 
+    permission is given otherwise. Commercial use of this code, any of
+    its parts, or its modifications is not permited. The copyright notices
+    must not be removed in case of any modifications. This Licence
+    commences on the date it is electronically or physically delivered
+    to you and continues in effect unless you fail to comply with any of
+    the terms of the License and fail to cure such breach within 30 days
+    of becoming aware of the breach, in which case the Licence automatically
+    terminates. This Licence is governed by the laws of Canada and all
+    disputes arising from or relating to this Licence must be brought
     in Toronto, Ontario.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -99,8 +99,8 @@
 
 #ifndef __GCOPTIMIZATION_H__
 #define __GCOPTIMIZATION_H__
-// Due to quiet bugs in function template specialization, it is not 
-// safe to use earlier MS compilers. 
+// Due to quiet bugs in function template specialization, it is not
+// safe to use earlier MS compilers.
 #if defined(_MSC_VER) && _MSC_VER < 1400
 #error Requires Visual C++ 2005 (VC8) compiler or later.
 #endif
@@ -157,7 +157,7 @@ class LinkedBlockList;
 
 class GCoptimization
 {
-public: 
+public:
 #ifdef GCO_ENERGYTYPE
 	typedef GCO_ENERGYTYPE EnergyType;
 	typedef GCO_ENERGYTERMTYPE EnergyTermType;
@@ -181,34 +181,34 @@ public:
 	GCoptimization(SiteID num_sites, LabelID num_labels);
 	virtual ~GCoptimization();
 
-	// Peforms expansion algorithm. Runs the number of iterations specified by max_num_iterations 
-	// If no input specified,runs until convergence. Returns total energy of labeling. 
+	// Peforms expansion algorithm. Runs the number of iterations specified by max_num_iterations
+	// If no input specified,runs until convergence. Returns total energy of labeling.
 	EnergyType expansion(int max_num_iterations=-1);
 
-	// Peforms  expansion on one label, specified by the input parameter alpha_label 
+	// Peforms  expansion on one label, specified by the input parameter alpha_label
 	bool alpha_expansion(LabelID alpha_label);
 
-	// Peforms swap algorithm. Runs it the specified number of iterations. If no  
-	// input is specified,runs until convergence                                  
+	// Peforms swap algorithm. Runs it the specified number of iterations. If no
+	// input is specified,runs until convergence
 	EnergyType swap(int max_num_iterations=-1);
 
-	// Peforms  swap on a pair of labels, specified by the input parameters alpha_label, beta_label 
+	// Peforms  swap on a pair of labels, specified by the input parameters alpha_label, beta_label
 	void alpha_beta_swap(LabelID alpha_label, LabelID beta_label);
 
-	// Peforms  swap on a pair of labels, specified by the input parameters alpha_label, beta_label 
-	// only on the sitess in the specified arrays, alphaSites and betaSitess, and the array sizes  
-	// are, respectively, alpha_size and beta_size                                                  
-	void alpha_beta_swap(LabelID alpha_label, LabelID beta_label, SiteID *alphaSites, 
+	// Peforms  swap on a pair of labels, specified by the input parameters alpha_label, beta_label
+	// only on the sitess in the specified arrays, alphaSites and betaSitess, and the array sizes
+	// are, respectively, alpha_size and beta_size
+	void alpha_beta_swap(LabelID alpha_label, LabelID beta_label, SiteID *alphaSites,
 		                 SiteID alpha_size, SiteID *betaSites, SiteID beta_size);
 
-	struct DataCostFunctor;      // use this class to pass a functor to setDataCost 
-	struct SmoothCostFunctor;    // use this class to pass a functor to setSmoothCost 
+	struct DataCostFunctor;      // use this class to pass a functor to setDataCost
+	struct SmoothCostFunctor;    // use this class to pass a functor to setSmoothCost
 
 	// Set cost for all (SiteID,LabelID) pairs. Default data cost is all zeros.
 	void setDataCost(DataCostFn fn);
 	void setDataCost(DataCostFnExtra fn, void *extraData);
 	void setDataCost(EnergyTermType *dataArray);
-	void setDataCost(SiteID s, LabelID l, EnergyTermType e); 
+	void setDataCost(SiteID s, LabelID l, EnergyTermType e);
 	void setDataCostFunctor(DataCostFunctor* f);
 	struct DataCostFunctor {
 		virtual EnergyTermType compute(SiteID s, LabelID l) = 0;
@@ -225,30 +225,30 @@ public:
 	// at each pair of on neighbors. Defaults to Potts model (0 if l1==l2, 1 otherwise)
 	void setSmoothCost(SmoothCostFn fn);
 	void setSmoothCost(SmoothCostFnExtra fn, void *extraData);
-	void setSmoothCost(LabelID l1, LabelID l2, EnergyTermType e); 
+	void setSmoothCost(LabelID l1, LabelID l2, EnergyTermType e);
 	void setSmoothCost(EnergyTermType *smoothArray);
 	void setSmoothCostFunctor(SmoothCostFunctor* f);
 	struct SmoothCostFunctor {
 		virtual EnergyTermType compute(SiteID s1, SiteID s2, LabelID l1, LabelID l2) = 0;
 	};
 
-	// Sets the cost of using label in the solution. 
+	// Sets the cost of using label in the solution.
 	// Set either as uniform cost, or an individual per-label cost.
 	void setLabelCost(EnergyTermType cost);
 	void setLabelCost(EnergyTermType* costArray);
 	void setLabelSubsetCost(LabelID* labels, LabelID numLabels, EnergyTermType cost);
 
-	// Returns current label assigned to input site 
+	// Returns current label assigned to input site
 	LabelID whatLabel(SiteID site);
 	void    whatLabel(SiteID start, SiteID count, LabelID* labeling);
 
-	// This function can be used to change the label of any site at any time      
+	// This function can be used to change the label of any site at any time
 	void setLabel(SiteID site, LabelID label);
 
-	// setLabelOrder(false) sets the order to be not random; setLabelOrder(true) 
-	//	sets the order to random. By default, the labels are visited in non-random order 
-	//	for both the swap and alpha-expansion moves                         
-	//	Note that srand() must be initialized with an appropriate seed in order for 
+	// setLabelOrder(false) sets the order to be not random; setLabelOrder(true)
+	//	sets the order to random. By default, the labels are visited in non-random order
+	//	for both the swap and alpha-expansion moves
+	//	Note that srand() must be initialized with an appropriate seed in order for
 	//	random order to take effect!
 	void setLabelOrder(bool isRandom);
 	void setLabelOrder(const LabelID* order, LabelID size);
@@ -256,7 +256,7 @@ public:
 	// Returns total energy for the current labeling
 	EnergyType compute_energy();
 
-	// Returns separate Data, Smooth, and Label energy of current labeling 
+	// Returns separate Data, Smooth, and Label energy of current labeling
 	EnergyType giveDataEnergy();
 	EnergyType giveSmoothEnergy();
 	EnergyType giveLabelEnergy();
@@ -274,7 +274,7 @@ public:
 protected:
 	struct LabelCost {
 		~LabelCost() { delete [] labels; }
-		EnergyTermType cost; 
+		EnergyTermType cost;
 		bool active;     // flag indicates if this particular labelcost is in effect (i.e. wrt m_labeling)
 		VarID aux;
 		LabelCost* next; // global list of LabelSetCost records
@@ -393,11 +393,11 @@ protected:
 	class DataCostFnSparse {
 		// cLogSitesPerBucket basically controls the compression ratio
 		// of the sparse structure: 1 => a dense array, num_sites => a single sparse list.
-		// The amount (cLogSitesPerBucket - cLinearSearchSize) determines the maximum 
+		// The amount (cLogSitesPerBucket - cLinearSearchSize) determines the maximum
 		// number of binary search steps taken for a cost lookup for specific (site,label).
 		//
 		static const int cLogSitesPerBucket = 9;
-		static const int cSitesPerBucket = (1 << cLogSitesPerBucket); 
+		static const int cSitesPerBucket = (1 << cLogSitesPerBucket);
 		static const size_t    cDataCostPtrMask = ~(sizeof(SparseDataCost)-1);
 		static const ptrdiff_t cLinearSearchSize = 64/sizeof(SparseDataCost);
 
@@ -454,7 +454,7 @@ protected:
 
 	EnergyType setupLabelCostsExpansion(SiteID size,LabelID alpha_label,EnergyT *e,SiteID *activeSites);
 	void       updateLabelingInfo(bool updateCounts=true,bool updateActive=true,bool updateCosts=true);
-	
+
 	// Check for overflow and submodularity issues when setting up binary graph cut
 	void addterm1_checked(EnergyT *e,VarID i,EnergyTermType e0,EnergyTermType e1);
 	void addterm1_checked(EnergyT *e,VarID i,EnergyTermType e0,EnergyTermType e1,EnergyTermType w);
@@ -474,7 +474,7 @@ private:
 	void printStatus1(const char* extraMsg=0);
 	void printStatus1(int cycle, bool isSwap, gcoclock_t ticks0);
 	void printStatus2(int alpha, int beta, int numVars, gcoclock_t ticks0);
-	
+
 	void permuteLabelTable();
 
 	template <typename DataCostT> bool       solveSpecialCases(EnergyType& energy);
@@ -482,7 +482,7 @@ private:
 
 	/////////////////////////////////////////////////////////////////////
 	// GreedyIter
-	//   Lets solveGreedy efficiently traverse the datacosts when 
+	//   Lets solveGreedy efficiently traverse the datacosts when
 	//   searching for the next greedy move.
 	/////////////////////////////////////////////////////////////////////
 	template <typename DataCostT>
@@ -501,7 +501,7 @@ private:
 		OLGA_INLINE SiteID site()  const { return m_site; }
 		OLGA_INLINE SiteID label() const { return *m_label; }
 		OLGA_INLINE bool   done()  const { return m_site == m_numSites; }
-		OLGA_INLINE GreedyIter& operator++() 
+		OLGA_INLINE GreedyIter& operator++()
 		{
 			// The inner loop is over labels, not sites, to improve memory locality.
 			// When dc() is pulling datacosts from an array (the typical format), this can
@@ -549,7 +549,7 @@ private:
 	SiteID m_height;
 	SiteID *m_neighbors;                 // holds neighbor indexes
 	EnergyTermType *m_neighborsWeights;    // holds neighbor weights
-	
+
 	void setupNeighbData(SiteID startY,SiteID endY,SiteID startX,SiteID endX,SiteID maxInd,SiteID *indexes);
 	void computeNeighborWeights(EnergyTermType *vCosts,EnergyTermType *hCosts);
 };
@@ -559,16 +559,16 @@ private:
 class GCoptimizationGeneralGraph:public GCoptimization
 {
 public:
-	// This is the constructor for non-grid graphs. Neighborhood structure must  be specified by 
+	// This is the constructor for non-grid graphs. Neighborhood structure must  be specified by
 	// setNeighbors()  function
 	GCoptimizationGeneralGraph(SiteID num_sites,LabelID num_labels);
 	virtual ~GCoptimizationGeneralGraph();
 
-	// Makes site1 and site2 neighbors of each other. Can be called only 1 time for each      
-	// unordered pair of sites. Parameter weight can be used to set spacially varying terms     
-	// If the desired penalty for neighboring sites site1 and site2 is                        
-	// V(label1,label2) = weight*SmoothnessPenalty(label1,label2), then                        
-	// member function setLabel should be called as: setLabel(site1,site2,weight)             
+	// Makes site1 and site2 neighbors of each other. Can be called only 1 time for each
+	// unordered pair of sites. Parameter weight can be used to set spacially varying terms
+	// If the desired penalty for neighboring sites site1 and site2 is
+	// V(label1,label2) = weight*SmoothnessPenalty(label1,label2), then
+	// member function setLabel should be called as: setLabel(site1,site2,weight)
 	void setNeighbors(SiteID site1, SiteID site2, EnergyTermType weight=1);
 
 	// passes pointers to arrays storing neighbor information
@@ -578,7 +578,7 @@ public:
 	// in the same order as neighborIndexes[i] stores the indexes
 	void setAllNeighbors(SiteID *numNeighbors,SiteID **neighborsIndexes,EnergyTermType **neighborsWeights);
 
-protected: 
+protected:
 	virtual void giveNeighborInfo(SiteID site, SiteID *numSites, SiteID **neighbors, EnergyTermType **weights);
 	virtual void finalizeNeighbors();
 

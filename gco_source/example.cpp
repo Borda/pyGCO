@@ -15,9 +15,9 @@
 // Below in the main program, we illustrate different ways of setting data and smoothness costs
 // that our interface allow and solve this optimizaiton problem
 
-// For most of the examples, we use no spatially varying pixel dependent terms. 
+// For most of the examples, we use no spatially varying pixel dependent terms.
 // For some examples, to demonstrate spatially varying terms we use
-// V(p1,p2,l1,l2) = w_{p1,p2}*[min((l1-l2)*(l1-l2),4)], with 
+// V(p1,p2,l1,l2) = w_{p1,p2}*[min((l1-l2)*(l1-l2),4)], with
 // w_{p1,p2} = p1+p2 if |p1-p2| == 1 and w_{p1,p2} = p1*p2 if |p1-p2| is not 1
 
 #include <stdio.h>
@@ -44,7 +44,7 @@ int dataFn(int p, int l, void *data)
 {
 	ForDataFn *myData = (ForDataFn *) data;
 	int numLab = myData->numLab;
-	
+
 	return( myData->data[p*numLab+l] );
 }
 
@@ -80,7 +80,7 @@ void GridGraph_Individually(int width,int height,int num_pixels,int num_labels)
 		for ( int l1 = 0; l1 < num_labels; l1++ )
 			for (int l2 = 0; l2 < num_labels; l2++ ){
 				int cost = (l1-l2)*(l1-l2) <= 4  ? (l1-l2)*(l1-l2):4;
-				gc->setSmoothCost(l1,l2,cost); 
+				gc->setSmoothCost(l1,l2,cost);
 			}
 
 		printf("\nBefore optimization energy is %d",gc->compute_energy());
@@ -203,8 +203,8 @@ void GridGraph_DfnSfn(int width,int height,int num_pixels,int num_labels)
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-// Uses spatially varying smoothness terms. That is 
-// V(p1,p2,l1,l2) = w_{p1,p2}*[min((l1-l2)*(l1-l2),4)], with 
+// Uses spatially varying smoothness terms. That is
+// V(p1,p2,l1,l2) = w_{p1,p2}*[min((l1-l2)*(l1-l2),4)], with
 // w_{p1,p2} = p1+p2 if |p1-p2| == 1 and w_{p1,p2} = p1*p2 if |p1-p2| is not 1
 void GridGraph_DArraySArraySpatVarying(int width,int height,int num_pixels,int num_labels)
 {
@@ -233,7 +233,7 @@ void GridGraph_DArraySArraySpatVarying(int width,int height,int num_pixels,int n
 	int *V = new int[num_pixels];
 	int *H = new int[num_pixels];
 
-	
+
 	for ( int i = 0; i < num_pixels; i++ ){
 		H[i] = i+(i+1)%3;
 		V[i] = i*(i+width)%7;
@@ -329,7 +329,7 @@ void GeneralGraph_DArraySArray(int width,int height,int num_pixels,int num_label
 ////////////////////////////////////////////////////////////////////////////////
 // in this version, set data and smoothness terms using arrays
 // grid neighborhood is set up "manually". Uses spatially varying terms. Namely
-// V(p1,p2,l1,l2) = w_{p1,p2}*[min((l1-l2)*(l1-l2),4)], with 
+// V(p1,p2,l1,l2) = w_{p1,p2}*[min((l1-l2)*(l1-l2),4)], with
 // w_{p1,p2} = p1+p2 if |p1-p2| == 1 and w_{p1,p2} = p1*p2 if |p1-p2| is not 1
 
 void GeneralGraph_DArraySArraySpatVarying(int width,int height,int num_pixels,int num_labels)
@@ -414,12 +414,12 @@ int main(int argc, char **argv)
 
 	// smoothness and data costs are set up using functions
 	GridGraph_DfnSfn(width,height,num_pixels,num_labels);
-	
-	// smoothness and data costs are set up using arrays. 
+
+	// smoothness and data costs are set up using arrays.
 	// spatially varying terms are present
 	GridGraph_DArraySArraySpatVarying(width,height,num_pixels,num_labels);
 
-	//Will pretend our graph is 
+	//Will pretend our graph is
 	//general, and set up a neighborhood system
 	// which actually is a grid
 	GeneralGraph_DArraySArray(width,height,num_pixels,num_labels);
@@ -434,4 +434,3 @@ int main(int argc, char **argv)
 }
 
 /////////////////////////////////////////////////////////////////////////////////
-
