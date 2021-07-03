@@ -9,6 +9,9 @@ _CGCO_LIB_PATH = os.path.dirname(os.path.abspath(os.path.realpath(__file__)))
 LIB_NAME = 'libcgco'
 
 LIST_LIBGCO = glob.glob(os.path.join(_CGCO_LIB_PATH, LIB_NAME + '.*'))
+print(_CGCO_LIB_PATH)
+print(LIB_NAME + '.*')
+print(os.path.join(_CGCO_LIB_PATH, LIB_NAME + '.*'))
 assert len(LIST_LIBGCO) > 0, 'nothing found: %s' % repr(LIST_LIBGCO)
 lib_exts = [os.path.splitext(os.path.basename(p))[1] for p in LIST_LIBGCO]
 if '.so' in lib_exts:

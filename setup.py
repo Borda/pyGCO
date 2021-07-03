@@ -20,11 +20,11 @@ import os
 import sys
 
 try:
-    from setuptools import Extension, setup  # , Command, find_packages
+    from setuptools import Extension, setup
     from setuptools.command.build_ext import build_ext
 except ImportError:
     from distutils.command.build_ext import build_ext
-    from distutils.core import Extension, setup  # , Command, find_packages
+    from distutils.core import Extension, setup
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 PACKAGE_NAME = 'gco-v3.0.zip'
