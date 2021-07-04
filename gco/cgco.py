@@ -1,29 +1,30 @@
 import ctypes as ct
 import glob
 import os
+from warnings import warn
 
 import numpy as np
 
 # or change this to your own path that contains libcgco.so
 _CGCO_LIB_PATH = os.path.dirname(os.path.abspath(os.path.realpath(__file__)))
-LIB_NAME = 'libcgco'
+_LIB_NAME = 'libcgco'
 
-LIST_LIBGCO = glob.glob(os.path.join(_CGCO_LIB_PATH, LIB_NAME + '.*'))
-print(_CGCO_LIB_PATH)
-print(LIB_NAME + '.*')
-print(os.path.join(_CGCO_LIB_PATH, LIB_NAME + '.*'))
-assert len(LIST_LIBGCO) > 0, 'nothing found: %s' % repr(LIST_LIBGCO)
-lib_exts = [os.path.splitext(os.path.basename(p))[1] for p in LIST_LIBGCO]
+_LIBGCO_PATTER = os.path.join(_CGCO_LIB_PATH, _LIB_NAME + '.*')
+_LIST_LIBGCO = glob.glob(_LIBGCO_PATTER)
+if not _LIST_LIBGCO:
+    raise RuntimeError('nothing found in %s' % repr(_LIBGCO_PATTER))
+lib_exts = [os.path.splitext(os.path.basename(p))[1] for p in _LIST_LIBGCO]
 if '.so' in lib_exts:
-    _CGCO_LIB_NAME = LIST_LIBGCO[lib_exts.index('.so')]
+    _CGCO_LIB_NAME = _LIST_LIBGCO[lib_exts.index('.so')]
 elif '.lib' in lib_exts:
-    _CGCO_LIB_NAME = LIST_LIBGCO[lib_exts.index('.lib')]
+    _CGCO_LIB_NAME = _LIST_LIBGCO[lib_exts.index('.lib')]
 elif '.dll' in lib_exts:
-    _CGCO_LIB_NAME = LIST_LIBGCO[lib_exts.index('.dll')]
+    _CGCO_LIB_NAME = _LIST_LIBGCO[lib_exts.index('.dll')]
 else:  # not sure what it found...
-    print('found libs: %s' % repr([os.path.basename(p) for p in LIST_LIBGCO]))
-    _CGCO_LIB_NAME = os.path.basename(LIST_LIBGCO[0])
-assert os.path.exists(_CGCO_LIB_PATH), '%s' % _CGCO_LIB_PATH
+    warn('found libs: %s' % repr([os.path.basename(p) for p in _LIST_LIBGCO]))
+    _CGCO_LIB_NAME = os.path.basename(_LIST_LIBGCO[0])
+if not os.path.exists(_CGCO_LIB_PATH):
+    raise RuntimeError('%s' % _CGCO_LIB_PATH)
 
 # _CGCO_LIB_PATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 # _CGCO_LIB_NAME = 'cgco'
