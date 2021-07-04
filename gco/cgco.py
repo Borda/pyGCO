@@ -1,30 +1,25 @@
 import ctypes as ct
-import glob
+from glob import glob
 import os
 from warnings import warn
 
 import numpy as np
 
+_LIB_NAME = 'libcgco'
+_LIB_EXTENSIONS = ('.so', '.lib', '.dll')
 # or change this to your own path that contains libcgco.so
 _CGCO_LIB_PATH = os.path.dirname(os.path.abspath(os.path.realpath(__file__)))
-_LIB_NAME = 'libcgco'
+assert os.path.isdir(_CGCO_LIB_PATH)
 
 _LIBGCO_PATTER = os.path.join(_CGCO_LIB_PATH, _LIB_NAME + '.*')
-_LIST_LIBGCO = glob.glob(_LIBGCO_PATTER)
+_LIST_LIBGCO = glob(_LIBGCO_PATTER)
 if not _LIST_LIBGCO:
-    raise RuntimeError('nothing found in %s' % repr(_LIBGCO_PATTER))
-lib_exts = [os.path.splitext(os.path.basename(p))[1] for p in _LIST_LIBGCO]
-if '.so' in lib_exts:
-    _CGCO_LIB_NAME = _LIST_LIBGCO[lib_exts.index('.so')]
-elif '.lib' in lib_exts:
-    _CGCO_LIB_NAME = _LIST_LIBGCO[lib_exts.index('.lib')]
-elif '.dll' in lib_exts:
-    _CGCO_LIB_NAME = _LIST_LIBGCO[lib_exts.index('.dll')]
-else:  # not sure what it found...
-    warn('found libs: %s' % repr([os.path.basename(p) for p in _LIST_LIBGCO]))
-    _CGCO_LIB_NAME = os.path.basename(_LIST_LIBGCO[0])
-if not os.path.exists(_CGCO_LIB_PATH):
-    raise RuntimeError('%s' % _CGCO_LIB_PATH)
+    raise RuntimeError('no compiled library found in %s' % repr(_LIBGCO_PATTER))
+
+_CGCO_LIB_NAMES = [os.path.basename(pl) for pl in _LIST_LIBGCO if os.path.splitext(pl)[1] in _LIB_EXTENSIONS]
+if not _CGCO_LIB_NAMES:  # not sure what it found...
+    raise RuntimeError('found potential libs: %s' % repr(_LIST_LIBGCO))
+_CGCO_LIB_NAME = _CGCO_LIB_NAMES[0]
 
 # _CGCO_LIB_PATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 # _CGCO_LIB_NAME = 'cgco'
