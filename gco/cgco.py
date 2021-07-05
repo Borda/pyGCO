@@ -1,12 +1,12 @@
 import ctypes as ct
-from glob import glob
 import os
+from glob import glob
 from warnings import warn
 
 import numpy as np
 
 _LIB_NAME = 'libcgco'
-_LIB_EXTENSIONS = ('.so', '.lib', '.dll')
+_LIB_EXTENSIONS = ('.so', '.lib', '.dll', '.pyd')
 # or change this to your own path that contains libcgco.so
 _CGCO_LIB_PATH = os.path.dirname(os.path.abspath(os.path.realpath(__file__)))
 assert os.path.isdir(_CGCO_LIB_PATH)
