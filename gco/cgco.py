@@ -1,7 +1,6 @@
 import ctypes as ct
 import os
 from glob import glob
-from warnings import warn
 
 import numpy as np
 
@@ -14,7 +13,7 @@ assert os.path.isdir(_CGCO_LIB_PATH)
 _LIBGCO_PATTER = os.path.join(_CGCO_LIB_PATH, _LIB_NAME + '.*')
 _LIST_LIBGCO = glob(_LIBGCO_PATTER)
 if not _LIST_LIBGCO:
-    raise RuntimeError('no compiled library found in %s' % repr(_LIBGCO_PATTER))
+    raise FileNotFoundError('no compiled library found in %s' % repr(_LIBGCO_PATTER))
 
 _CGCO_LIB_NAMES = [os.path.basename(pl) for pl in _LIST_LIBGCO if os.path.splitext(pl)[1] in _LIB_EXTENSIONS]
 if not _CGCO_LIB_NAMES:  # not sure what it found...

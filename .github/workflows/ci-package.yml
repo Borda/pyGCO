@@ -88,6 +88,6 @@ jobs:
         ls
         pip install $(python -c "import glob ; print(' '.join(glob.glob('*.whl')))")
         # fixme
-        python -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])'
+        python -c 'import sysconfig; print(sysconfig.get_paths())'
         pip show gco-wrapper
         python -c "import gco ;  print(gco.__version__)"

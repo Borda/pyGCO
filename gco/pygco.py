@@ -5,8 +5,8 @@ import numpy as np
 
 try:
     from cgco import _cgco, _SMOOTH_COST_FN
-except Exception:
-    from .cgco import _cgco, _SMOOTH_COST_FN
+except (ImportError, ModuleNotFoundError):
+    from gco.cgco import _cgco, _SMOOTH_COST_FN
 
 # keep 4 effective digits for the fractional part if using real potentials
 # make sure pairwise * smooth = unary so that the unary potentials and pairwise
