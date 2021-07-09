@@ -91,7 +91,7 @@ setup(
     cmdclass={'build_ext': BuildExt},
     ext_modules=[
         Extension(
-            'gco.libcgco',
+            'gco.lib',
             gco_files,
             language='c++',
             include_dirs=[LOCAL_SOURCE],

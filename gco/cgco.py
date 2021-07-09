@@ -5,7 +5,7 @@ from glob import glob
 import numpy as np
 
 _LIB_NAME = 'libcgco'
-_LIB_EXTENSIONS = ('.so', '.lib', '.dll', '.pyd')
+_LIB_EXTENSIONS = ('.so', '.lib', '.dll')
 # or change this to your own path that contains libcgco.so
 _CGCO_LIB_PATH = os.path.dirname(os.path.abspath(os.path.realpath(__file__)))
 assert os.path.isdir(_CGCO_LIB_PATH)
