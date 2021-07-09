@@ -96,7 +96,7 @@ setup(
             language='c++',
             include_dirs=[LOCAL_SOURCE],
             library_dirs=[LOCAL_SOURCE],
-            # extra_compile_args=["-fpermissive"],
+            extra_compile_args=["-fpermissive"],
         ),
     ],
     setup_requires=setup_reqs,
