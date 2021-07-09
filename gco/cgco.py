@@ -20,7 +20,6 @@ if not _CGCO_LIB_NAMES:  # not sure what it found...
     raise RuntimeError('found potential libs: %s' % repr(_LIST_LIBGCO))
 _CGCO_LIB_NAME = _CGCO_LIB_NAMES[0]
 
-
 # change the type definition depending on your machine and the compiled GCO library
 _handle_type = ct.c_int
 _handle_ptr_type = np.ctypeslib.ndpointer(dtype=np.intc)
