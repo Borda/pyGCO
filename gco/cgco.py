@@ -5,7 +5,7 @@ from glob import glob
 import numpy as np
 
 _LIB_NAME = 'libcgco'
-_LIB_EXTENSIONS = ('.so', '.lib', '.dll')
+_LIB_EXTENSIONS = ('.so', '.lib', '.dll', '.pyd')
 # or change this to your own path that contains libcgco.so
 _CGCO_LIB_PATH = os.path.dirname(os.path.abspath(os.path.realpath(__file__)))
 assert os.path.isdir(_CGCO_LIB_PATH)
@@ -18,7 +18,7 @@ if not _LIST_LIBGCO:
 _CGCO_LIB_NAMES = [os.path.basename(pl) for pl in _LIST_LIBGCO if os.path.splitext(pl)[1] in _LIB_EXTENSIONS]
 if not _CGCO_LIB_NAMES:  # not sure what it found...
     raise RuntimeError('found potential libs: %s' % repr(_LIST_LIBGCO))
-_CGCO_LIB_NAME = _CGCO_LIB_NAMES[0]
+_CGCO_LIB_NAME, _ = os.path.splitext(_CGCO_LIB_NAMES[0])
 
 # _CGCO_LIB_PATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 # _CGCO_LIB_NAME = 'cgco'
