@@ -16,11 +16,12 @@ if not _LIST_LIBGCO:
     raise FileNotFoundError('no compiled library found in %s' % repr(_LIBGCO_PATTER))
 
 _CGCO_LIB_NAMES = []
-for ext  in _LIB_EXTENSIONS:
-    _CGCO_LIB_NAMES += [os.path.basename(pl) for pl in _LIST_LIBGCO if os.path.splitext(pl)[1] == _LIB_EXTENSIONS]
+for ext in _LIB_EXTENSIONS:
+    _CGCO_LIB_NAMES += [os.path.basename(pl) for pl in _LIST_LIBGCO if os.path.splitext(pl)[1] == ext]
 if not _CGCO_LIB_NAMES:  # not sure what it found...
     raise RuntimeError('found potential libs: %s' % repr(_LIST_LIBGCO))
 _CGCO_LIB_NAME = _CGCO_LIB_NAMES[0]
+print(_CGCO_LIB_NAME)
 
 # change the type definition depending on your machine and the compiled GCO library
 _handle_type = ct.c_int
