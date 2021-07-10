@@ -32,12 +32,6 @@ URL_LIB_GCO = 'http://vision.csd.uwo.ca/code/' + PACKAGE_NAME
 LOCAL_SOURCE = 'gco_source'
 
 
-def _parse_requirements(file_path):
-    with open(file_path) as fp:
-        reqs = [r.rstrip() for r in fp.readlines() if not r.startswith('#')]
-        return reqs
-
-
 class BuildExt(build_ext):
     """ build_ext command for use when numpy headers are needed.
     SEE: https://stackoverflow.com/questions/2379898
@@ -66,11 +60,11 @@ gco_files += [os.path.join('gco', 'cgco.cpp')]
 
 if sys.version_info.major == 2:
     # numpy v1.17 drops support for py2
-    setup_reqs = ['Cython', 'numpy<1.17']
-    install_reqs = _parse_requirements(os.path.join(HERE, 'requirements-py2.txt'))
+    setup_reqs = ['Cython>=0.23.1', 'numpy>=1.8.2, <1.17']
+    install_reqs = ['Cython>=0.23.1', 'numpy>=1.8.2, <1.17']
 else:
-    setup_reqs = ['Cython', 'numpy']
-    install_reqs = _parse_requirements(os.path.join(HERE, 'requirements.txt'))
+    setup_reqs = ['Cython>=0.23.1', 'numpy>=1.8.2']
+    install_reqs = ['Cython>=0.23.1', 'numpy>=1.8.2']
 
 setup(
     name='gco-wrapper',

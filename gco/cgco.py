@@ -39,6 +39,7 @@ _success_ptr_type = np.ctypeslib.ndpointer(dtype=np.intc)
 _SMOOTH_COST_FN = ct.CFUNCTYPE(_energy_term_type, ct.c_int, ct.c_int, _label_id_type, _label_id_type)
 
 # load cgco shared library
+# see: https://catherineh.github.io/programming/2016/07/07/troubleshooting-windows-dll-imports-in-python
 _cgco = np.ctypeslib.load_library(_CGCO_LIB_NAME, _CGCO_LIB_PATH)
 
 # declare the functions, argument types and return types
