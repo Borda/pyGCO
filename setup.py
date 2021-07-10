@@ -90,7 +90,8 @@ setup(
             language='c++',
             include_dirs=[LOCAL_SOURCE],
             library_dirs=[LOCAL_SOURCE],
-            extra_compile_args=["-fpermissive"],
+            # Downgrade some diagnostics about nonconformant code from errors to warnings.
+            # extra_compile_args=["-fpermissive"],
         ),
     ],
     setup_requires=setup_reqs,

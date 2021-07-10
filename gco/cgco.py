@@ -15,9 +15,7 @@ _LIST_LIBGCO = glob(_LIBGCO_PATTER)
 if not _LIST_LIBGCO:
     raise FileNotFoundError('no compiled library found in %s' % repr(_LIBGCO_PATTER))
 
-_CGCO_LIB_NAMES = []
-for ext in _LIB_EXTENSIONS:
-    _CGCO_LIB_NAMES += [os.path.basename(pl) for pl in _LIST_LIBGCO if os.path.splitext(pl)[1] == ext]
+_CGCO_LIB_NAMES = [os.path.basename(pl) for pl in _LIST_LIBGCO if os.path.splitext(pl)[1] in _LIB_EXTENSIONS]
 if not _CGCO_LIB_NAMES:  # not sure what it found...
     raise RuntimeError('found potential libs: %s' % repr(_LIST_LIBGCO))
 _CGCO_LIB_NAME = _CGCO_LIB_NAMES[0]
