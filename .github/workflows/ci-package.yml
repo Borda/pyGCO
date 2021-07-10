@@ -79,6 +79,7 @@ jobs:
 
     - name: Create package
       run: |
+        python -c "import platform ; print(platform.uname())"
         pip install setuptools wheel "numpy~=1.16.0"
         python setup.py sdist bdist_wheel
 
