@@ -58,13 +58,9 @@ SOURCE_FILES = [
 gco_files = [os.path.join(LOCAL_SOURCE, f) for f in SOURCE_FILES]
 gco_files += [os.path.join('gco', 'cgco.cpp')]
 
-if sys.version_info.major == 2:
-    # numpy v1.17 drops support for py2
-    setup_reqs = ['Cython>=0.23.1', 'numpy>=1.8.2, <1.17']
-    install_reqs = ['Cython>=0.23.1', 'numpy>=1.8.2, <1.17']
-else:
-    setup_reqs = ['Cython>=0.23.1', 'numpy>=1.8.2']
-    install_reqs = ['Cython>=0.23.1', 'numpy>=1.8.2']
+# numpy v1.17 drops support for py2
+setup_reqs = ['Cython>=0.23.1', 'numpy>=1.8.2;python_version>=3.0', 'numpy>=1.8.2,numpy<1.17;python_version<3.0']
+install_reqs = ['Cython>=0.23.1', 'numpy>=1.8.2;python_version>=3.0', 'numpy>=1.8.2,numpy<1.17;python_version<3.0']
 
 setup(
     name='gco-wrapper',
