@@ -71,7 +71,7 @@ setup(
     url='http://vision.csd.uwo.ca/code/',
     packages=['gco'],
     # edit also gco.__init__.py!
-    version='3.0.8',
+    version='3.0.9',
     license='MIT',
     author='Yujia Li & A. Mueller',
     author_email='yujiali@cs.tornto.edu',
