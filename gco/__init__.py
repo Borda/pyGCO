@@ -5,7 +5,7 @@ __version_info__ = tuple([int(i) for i in __version__.split('.')])
 import numpy
 
 # patch for numpy 1.24+
-for name, tp in [("int", int)]:
+for name, tp in [("int", int), ("float", float), ("bool", bool)]:
     if not hasattr(numpy, name):
         setattr(numpy, name, tp)
 
