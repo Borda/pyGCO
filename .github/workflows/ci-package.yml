@@ -34,7 +34,7 @@ jobs:
         python setup.py sdist bdist_wheel
         twine check dist/*
 
-  install:
+  pkg-install:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -55,13 +55,14 @@ jobs:
 
     - name: Try installing
       run: |
-        pip install "pip>=20.1" "numpy~=1.16.0" "matplotlib>=2.0, <3.0"
+        pip install "pip>=20.1" "numpy>=1.16.0" "matplotlib>=2.0, <3.0"
         python setup.py install
         cd ..
         pip show gco-wrapper
         python -c "import gco ;  print(gco.__version__)"
 
   pip-dist:
+    needs: pkg-install
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -83,7 +84,7 @@ jobs:
     - name: Create package
       run: |
         python -c "import platform ; print(platform.uname())"
-        pip install setuptools wheel "numpy~=1.16.0"
+        pip install setuptools wheel "numpy>=1.16.0"
         python setup.py sdist bdist_wheel
 
     - name: Try installing
