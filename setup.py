@@ -27,13 +27,13 @@ except ImportError:
     from distutils.core import Extension, setup
 
 HERE = os.path.abspath(os.path.dirname(__file__))
-PACKAGE_NAME = 'gco-v3.0.zip'
-URL_LIB_GCO = 'http://vision.csd.uwo.ca/code/' + PACKAGE_NAME
-LOCAL_SOURCE = 'gco_source'
+PACKAGE_NAME = "gco-v3.0.zip"
+URL_LIB_GCO = "http://vision.csd.uwo.ca/code/" + PACKAGE_NAME
+LOCAL_SOURCE = "gco_source"
 
 
 class BuildExt(build_ext):
-    """ build_ext command for use when numpy headers are needed.
+    """build_ext command for use when numpy headers are needed.
     SEE: https://stackoverflow.com/questions/2379898
     SEE: https://stackoverflow.com/questions/19919905/how-to-bootstrap-numpy-installation-in-setup-py
     """
@@ -46,49 +46,50 @@ class BuildExt(build_ext):
         # Prevent numpy from thinking it is still in its setup process:
         # __builtins__.__NUMPY_SETUP__ = False
         import numpy
+
         self.include_dirs.append(numpy.get_include())
 
 
 SOURCE_FILES = [
-    'graph.cpp',
-    'maxflow.cpp',
-    'LinkedBlockList.cpp',
-    'GCoptimization.cpp',
+    "graph.cpp",
+    "maxflow.cpp",
+    "LinkedBlockList.cpp",
+    "GCoptimization.cpp",
 ]
 gco_files = [os.path.join(LOCAL_SOURCE, f) for f in SOURCE_FILES]
-gco_files += [os.path.join('gco', 'cgco.cpp')]
+gco_files += [os.path.join("gco", "cgco.cpp")]
 
 if sys.version_info.major == 2:
     # numpy v1.17 drops support for py2
-    setup_reqs = ['Cython>=0.23.1', 'numpy>=1.8.2, <1.17']
-    install_reqs = ['Cython>=0.23.1', 'numpy>=1.8.2, <1.17']
+    setup_reqs = ["Cython>=0.23.1", "numpy>=1.8.2, <1.17"]
+    install_reqs = ["Cython>=0.23.1", "numpy>=1.8.2, <1.17"]
 else:
-    setup_reqs = ['Cython>=0.23.1', 'numpy>=1.8.2']
-    install_reqs = ['Cython>=0.23.1', 'numpy>=1.8.2']
+    setup_reqs = ["Cython>=0.23.1", "numpy>=1.8.2"]
+    install_reqs = ["Cython>=0.23.1", "numpy>=1.8.2"]
 
 setup(
-    name='gco-wrapper',
-    url='http://vision.csd.uwo.ca/code/',
-    packages=['gco'],
+    name="gco-wrapper",
+    url="http://vision.csd.uwo.ca/code/",
+    packages=["gco"],
     # edit also gco.__init__.py!
-    version='3.0.9',
-    license='MIT',
-    author='Yujia Li & A. Mueller',
-    author_email='yujiali@cs.tornto.edu',
-    maintainer='Jiri Borovec',
-    maintainer_email='jiri.borovec@fel.cvut.cz',
-    description='pyGCO: a python wrapper for the graph cuts package',
-    download_url='https://github.com/Borda/pyGCO',
+    version="3.0.9",
+    license="MIT",
+    author="Yujia Li & A. Mueller",
+    author_email="yujiali@cs.tornto.edu",
+    maintainer="Jiri Borovec",
+    maintainer_email="jiri.borovec@fel.cvut.cz",
+    description="pyGCO: a python wrapper for the graph cuts package",
+    download_url="https://github.com/Borda/pyGCO",
     project_urls={
         "Source Code": "https://github.com/Borda/pyGCO",
     },
     zip_safe=False,
-    cmdclass={'build_ext': BuildExt},
+    cmdclass={"build_ext": BuildExt},
     ext_modules=[
         Extension(
-            'gco.libcgco',
+            "gco.libcgco",
             gco_files,
-            language='c++',
+            language="c++",
             include_dirs=[LOCAL_SOURCE],
             library_dirs=[LOCAL_SOURCE],
             # Downgrade some diagnostics about nonconformant code from errors to warnings.
@@ -100,7 +101,6 @@ setup(
     # test_suite='nose.collector',
     # tests_require=['nose'],
     include_package_data=True,
-
     # See https://PyPI.python.org/PyPI?%3Aaction=list_classifiers
     classifiers=[
         "Development Status :: 4 - Beta",
