@@ -71,7 +71,7 @@ else:
 
 ABOUT = _load_py_module(name="about", location=os.path.join("src", "gco", "__about__.py"))
 
-with open("README.md") as fp:
+with open("README.md", encoding="utf_8") as fp:
     readme = fp.read()
 readme = re.sub(
     pattern=r"\!\[([\w ]+)\]\(\./(.+)\)",
