@@ -8,7 +8,7 @@ __pycache__/
 *.zip
 
 # C extensions
-*.cpp
+# *.cpp
 *.o
 *.so
 
