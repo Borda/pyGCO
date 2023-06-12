@@ -26,10 +26,9 @@ except ImportError:
     from distutils.command.build_ext import build_ext
     from distutils.core import Extension, setup
 
-HERE = os.path.dirname(__file__)
-PACKAGE_NAME = os.path.join(HERE, "gco-v3.0.zip")
+PACKAGE_NAME = os.path.join("gco-v3.0.zip")
 URL_LIB_GCO = "http://vision.csd.uwo.ca/code/" + PACKAGE_NAME
-LOCAL_SOURCE = os.path.join(HERE, "src", "gco_cpp")
+LOCAL_SOURCE = os.path.join("src", "gco_cpp")
 
 
 class BuildExt(build_ext):
@@ -50,18 +49,16 @@ class BuildExt(build_ext):
         self.include_dirs.append(numpy.get_include())
 
 
-gco_files = [
+GCO_FILES = [
     os.path.join(LOCAL_SOURCE, f) for f in ("graph.cpp", "maxflow.cpp", "LinkedBlockList.cpp", "GCoptimization.cpp")
 ]
-gco_files += [os.path.join("src", "gco", "cgco.cpp")]
+GCO_FILES += [os.path.join("src", "gco", "cgco.cpp")]
 
 if sys.version_info.major == 2:
     # numpy v1.17 drops support for py2
-    setup_reqs = ["Cython>=0.23.1", "numpy>=1.8.2, <1.17"]
-    install_reqs = ["Cython>=0.23.1", "numpy>=1.8.2, <1.17"]
+    SETUP_REQUIRES = INSTALL_REQUIRES = ["Cython>=0.23.1", "numpy>=1.8.2, <1.17"]
 else:
-    setup_reqs = ["Cython>=0.23.1", "numpy>=1.8.2"]
-    install_reqs = ["Cython>=0.23.1", "numpy>=1.8.2"]
+    SETUP_REQUIRES = INSTALL_REQUIRES = ["Cython>=0.23.1", "numpy>=1.8.2"]
 
 setup(
     name="gco-wrapper",
@@ -85,7 +82,7 @@ setup(
     ext_modules=[
         Extension(
             "gco.libcgco",
-            gco_files,
+            GCO_FILES,
             language="c++",
             include_dirs=[LOCAL_SOURCE],
             library_dirs=[LOCAL_SOURCE],
@@ -93,8 +90,8 @@ setup(
             # extra_compile_args=["-fpermissive"],
         ),
     ],
-    setup_requires=setup_reqs,
-    install_requires=install_reqs,
+    setup_requires=SETUP_REQUIRES,
+    install_requires=INSTALL_REQUIRES,
     # test_suite='nose.collector',
     # tests_require=['nose'],
     include_package_data=True,
