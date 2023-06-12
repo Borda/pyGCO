@@ -32,31 +32,13 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install --upgrade --requirement requirements.txt
-        pip install "pytest>=3.0" pytest-cov coverage codecov
+        pip --version
+        pip install -e . -U --requirement tests/requirements.txt
         pip list
       shell: bash
 
-    - name: Test makefile
-      if: runner.os != 'Windows'
-      run: |
-        # make download
-        make all
-
-    - name: Build package
-      run: |
-        python setup.py build_ext --inplace
-
     - name: Tests
-      run: |
-        python -m pytest . -v --doctest-modules --cov=gco --junitxml=junit/test-results-${{ runner.os }}-${{ matrix.python-version }}.xml
-
-    - name: Upload pytest test results
-      uses: actions/upload-artifact@v2
-      with:
-        name: pytest-results-${{ runner.os }}-${{ matrix.python-version }}
-        path: junit/test-results-${{ runner.os }}-${{ matrix.python-version }}.xml
-      if: failure()
+      run: python -m pytest tests/ -v --cov=gco
 
     - name: Statistics
       if: success()
