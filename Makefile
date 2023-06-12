@@ -57,7 +57,7 @@ cgco.o: \
 	    -o cgco.o
 
 test_wrapper: \
-    test_wrapper.cpp
+    tests/test_wrapper.cpp
 	$(CXX) $(INC) -L. tests/test_wrapper.cpp \
 	    -o test_wrapper -Wl,-rpath,. -lcgco
 
