@@ -5,6 +5,7 @@ description-file = "README.md"
 requires = [
     "setuptools",
     "wheel",
+    "numpy",
 ]
 
 
