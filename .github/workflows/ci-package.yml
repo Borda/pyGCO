@@ -40,9 +40,12 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-20.04, macOS-11, windows-2019]
-        python-version: ["3.6", "3.8", "3.10"]
+        python-version: ["3.6", "3.9"]
         include:
-          - { os: ubuntu-20.04, python-version: 2.7 }
+          - { os: "ubuntu-22.04", python-version: "3.11" }
+          - { os: "macOS-13", python-version: "3.11" }
+          - { os: "windows-2022", python-version: "3.11" }
+          - { os: "ubuntu-20.04", python-version: "2.7" }
     # Timeout: https://stackoverflow.com/a/59076067/4521646
     timeout-minutes: 10
 
@@ -71,9 +74,12 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-20.04, macOS-11, windows-2019]
-        python-version: ["3.6", "3.8", "3.11"]
+        python-version: ["3.6", "3.9"]
         include:
-          - { os: ubuntu-20.04, python-version: 2.7 }
+          - { os: "ubuntu-22.04", python-version: "3.11" }
+          - { os: "macOS-13", python-version: "3.11" }
+          - { os: "windows-2022", python-version: "3.11" }
+          - { os: "ubuntu-20.04", python-version: "2.7" }
     # Timeout: https://stackoverflow.com/a/59076067/4521646
     timeout-minutes: 10
 
