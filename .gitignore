@@ -8,8 +8,7 @@ __pycache__/
 *.zip
 
 # C extensions
-*.cpp
-!src/gco_cpp *.cpp
+# *.cpp
 *.o
 *.so
 

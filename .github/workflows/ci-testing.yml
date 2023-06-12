@@ -33,9 +33,13 @@ jobs:
     - name: Install dependencies
       run: |
         pip --version
-        pip install -e . -U --requirement tests/requirements.txt
+        pip install -e . -U -r tests/requirements.txt
         pip list
       shell: bash
+
+    - name: Test makefile
+      if: runner.os != 'Windows'
+      run: make all
 
     - name: Tests
       run: python -m pytest tests/ -v --cov=gco

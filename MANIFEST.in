@@ -3,12 +3,8 @@ include requirements.txt
 include requirements-py2.txt
 # Include source files
 recursive-include gco *.h
-recursive-include gco_source *.TXT
-recursive-include gco_source *.h
-recursive-include gco_source *.cpp
+recursive-include gco_source *.TXT *.h *.cpp
 
-exclude test_*.py
-exclude test_*.cpp
 exclude *.yml
 exclude *.yaml
 exclude Makefile
