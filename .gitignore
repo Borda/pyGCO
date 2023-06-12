@@ -9,6 +9,7 @@ __pycache__/
 
 # C extensions
 *.cpp
+!src/gco_cpp *.cpp
 *.o
 *.so
 
