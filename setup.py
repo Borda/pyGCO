@@ -29,7 +29,7 @@ except ImportError:
 HERE = os.path.abspath(os.path.dirname(__file__))
 PACKAGE_NAME = os.path.join(HERE, "gco-v3.0.zip")
 URL_LIB_GCO = "http://vision.csd.uwo.ca/code/" + PACKAGE_NAME
-LOCAL_SOURCE = os.path.join(HERE, "gco_cpp")
+LOCAL_SOURCE = os.path.join(HERE, "src", "gco_cpp")
 
 
 class BuildExt(build_ext):
