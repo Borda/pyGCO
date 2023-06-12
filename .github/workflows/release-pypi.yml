@@ -4,6 +4,10 @@ name: PyPI Release
 on:  # Trigger the workflow on push or pull request, but only for the main branch
   push:
     branches: [master]
+  pull_request:
+    branches: [master]
+    paths:
+      - ".github/workflows/release-pypi.yml"
   release:
     types: [published]
 
@@ -11,7 +15,7 @@ on:  # Trigger the workflow on push or pull request, but only for the main branc
 
 jobs:
   build-sdist:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
     - uses: actions/setup-python@v2
@@ -59,7 +63,7 @@ jobs:
         path: dist
 
   publish-pypi:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: build-wheels
     if: startsWith(github.event.ref, 'refs/tags') || github.event_name == 'release'
     steps:
