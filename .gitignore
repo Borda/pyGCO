@@ -27,6 +27,7 @@ test_wrapper
 *.obj
 *.exp
 *.exe
+*.log
 
 # PyCharm
 .idea/
@@ -44,3 +45,8 @@ nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
+
+dist/
+wheelhouse/
+.eggs/
+*.egg.info/
