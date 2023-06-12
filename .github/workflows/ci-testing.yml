@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-20.04, macOS-11, windows-2019]
-        python-version: ["3.6", "3.8", "3.10"]
+        python-version: ["3.6", "3.8", "3.11"]
         include:
           - os: ubuntu-20.04
             python-version: 2.7
@@ -36,10 +36,6 @@ jobs:
         pip install -e . -U -r tests/requirements.txt
         pip list
       shell: bash
-
-    - name: Test makefile
-      if: runner.os != 'Windows'
-      run: make all
 
     - name: Tests
       run: python -m pytest tests/ -v --cov=gco
@@ -60,6 +56,30 @@ jobs:
         flags: pytest,python${{ matrix.python-version }}
         fail_ci_if_error: false
 
+  makefile-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04, macOS-11]
+        python-version: ["3.6", "3.11"]
+    timeout-minutes: 10
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        pip --version
+        pip install --U -r requirements.txt
+        pip list
+      shell: bash
+
+    - name: Test makefile
+      run: make all
 
   testing-guardian:
     runs-on: ubuntu-latest
