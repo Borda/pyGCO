@@ -73,20 +73,20 @@ pip install gco-wrapper
 
 Visualisation of the unary terns for **binary segmentation**
 
-![unary terms](./images/binary_unary.png)
+![unary terms](./tests/images/binary_unary.png)
 
 **4-connected** components with the initial labeling (left) and estimated labeling with regularisation **1** (middle) and **0** (right)
 
-![labelling](./images/binary_labels-4conn.png)
+![labelling](./tests/images/binary_labels-4conn.png)
 
 **8-connected** components with the initial labeling (left) and estimated labeling with regularisation **1** (middle) and **0** (right)
 
-![labelling](./images/binary_labels-8conn.png)
+![labelling](./tests/images/binary_labels-8conn.png)
 
 Visualisation of the unary terns for **3 labels segmentation**
 
-![unary terms](./images/grid_unary.png)
+![unary terms](./tests/images/grid_unary.png)
 
 with the __initial__ labeling (left) and __estimated__ labeling (right)
 
-![labelling](./images/grid_labels.png)
+![labelling](./tests/images/grid_labels.png)

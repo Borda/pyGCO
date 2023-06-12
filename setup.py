@@ -20,7 +20,7 @@ import os
 import sys
 
 try:
-    from setuptools import Extension, setup
+    from setuptools import Extension, setup, find_packages
     from setuptools.command.build_ext import build_ext
 except ImportError:
     from distutils.command.build_ext import build_ext
@@ -70,7 +70,8 @@ else:
 setup(
     name="gco-wrapper",
     url="http://vision.csd.uwo.ca/code/",
-    packages=["gco"],
+    package_dir={"": "src"},
+    packages=find_packages(where="src"),
     # edit also gco.__init__.py!
     version="3.0.9",
     license="MIT",
