@@ -72,12 +72,14 @@ else:
 ABOUT = _load_py_module(name="about", location=os.path.join("src", "gco", "__about__.py"))
 
 with open("README.md", encoding="utf_8") as fp:
-    readme = fp.read()
-readme = re.sub(
-    pattern=r"\!\[([\w ]+)\]\(\./(.+)\)",
-    repl=rf"![\1](https://raw.githubusercontent.com/borda/pyGCO/{ABOUT.__version__}/\2)",
-    string=readme,
-)
+    readme = re.sub(
+        # replace image pattern
+        pattern=r"\!\[([\w ]+)\]\(\./(.+)\)",
+        # with static urls and the same format
+        repl=rf"![\1](https://raw.githubusercontent.com/borda/pyGCO/{ABOUT.__version__}/\2)",
+        # for whole README
+        string=fp.read(),
+    )
 
 setup(
     name="gco-wrapper",
