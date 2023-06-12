@@ -70,7 +70,7 @@ jobs:
       with:
         name: pypi-packages-${{ github.sha }}
         path: dist
-    - run: ls -l dist/
+    - run: ls -lh dist/
 
   publish-pypi:
     runs-on: ubuntu-latest
@@ -85,7 +85,7 @@ jobs:
       with:
         name: pypi-packages-${{ github.sha }}
         path: dist
-    - run: ls -lh dist/
+    - run: ls -l dist/
 
     # We do this, since failures on test.pypi aren't that bad
     - name: Publish to Test PyPI
