@@ -51,9 +51,9 @@ src/gco_cpp/GCoptimization.o: \
 	    -o src/gco_cpp/GCoptimization.o
 
 cgco.o: \
-    gco/cgco.cpp src/gco_cpp/GCoptimization.h
+    src/gco/cgco.cpp src/gco_cpp/GCoptimization.h
 	$(CXX) $(CFLAGS) $(INC) \
-	    -c gco/cgco.cpp \
+	    -c src/gco/cgco.cpp \
 	    -o cgco.o
 
 test_wrapper: \
