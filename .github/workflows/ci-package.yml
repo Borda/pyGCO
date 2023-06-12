@@ -36,10 +36,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, macOS-10.15, windows-2019]
+        os: [ubuntu-20.04, macOS-11, windows-2019]
         python-version: [3.6, 3.9]
         include:
-          - os: ubuntu-18.04
+          - os: ubuntu-20.04
             python-version: 2.7
     # Timeout: https://stackoverflow.com/a/59076067/4521646
     timeout-minutes: 10
@@ -63,10 +63,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, macOS-10.15, windows-2019]
+        os: [ubuntu-20.04, macOS-11, windows-2019]
         python-version: [3.6, 3.9]
         include:
-          - os: ubuntu-18.04
+          - os: ubuntu-20.04
             python-version: 2.7
     # Timeout: https://stackoverflow.com/a/59076067/4521646
     timeout-minutes: 10
