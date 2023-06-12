@@ -17,7 +17,9 @@ Release package
 """
 
 import os
+import re
 import sys
+from importlib.util import module_from_spec, spec_from_file_location
 
 try:
     from setuptools import Extension, find_packages, setup
@@ -29,6 +31,13 @@ except ImportError:
 PACKAGE_NAME = os.path.join("gco-v3.0.zip")
 URL_LIB_GCO = "http://vision.csd.uwo.ca/code/" + PACKAGE_NAME
 LOCAL_SOURCE = os.path.join("src", "gco_cpp")
+
+
+def _load_py_module(name: str, location: str):
+    spec = spec_from_file_location(name, location)
+    py = module_from_spec(spec)
+    spec.loader.exec_module(py)
+    return py
 
 
 class BuildExt(build_ext):
@@ -60,19 +69,31 @@ if sys.version_info.major == 2:
 else:
     SETUP_REQUIRES = INSTALL_REQUIRES = ["Cython>=0.23.1", "numpy>=1.8.2"]
 
+ABOUT = _load_py_module(name="about", location=os.path.join("src", "gco", "__about__.py"))
+
+with open("README.md") as fp:
+    readme = fp.read()
+readme = re.sub(
+    pattern=r"\!\[([\w ]+)\]\(\./(.+)\)",
+    repl=rf"![\1](https://raw.githubusercontent.com/borda/pyGCO/{ABOUT.__version__}/\2)",
+    string=readme,
+)
+
 setup(
     name="gco-wrapper",
     url="http://vision.csd.uwo.ca/code/",
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     # edit also gco.__init__.py!
-    version="3.0.9",
+    version=ABOUT.__version__,
     license="MIT",
     author="Yujia Li & A. Mueller",
     author_email="yujiali@cs.tornto.edu",
     maintainer="Jiri Borovec",
     maintainer_email="jiri.borovec@fel.cvut.cz",
     description="pyGCO: a python wrapper for the graph cuts package",
+    long_description=readme,
+    long_description_content_type="text/markdown",
     download_url="https://github.com/Borda/pyGCO",
     project_urls={
         "Source Code": "https://github.com/Borda/pyGCO",
