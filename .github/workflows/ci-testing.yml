@@ -6,17 +6,20 @@ on:  # Trigger the workflow on push or pull request, but only for the main branc
   pull_request:
     branches: [master]
 
-jobs:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.head_ref }}
+  cancel-in-progress: ${{ ! (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/release/')) }}
 
-  pytest:
+jobs:
+  pytester:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, macOS-10.15, windows-2019]
-        python-version: [3.6, 3.9]
+        os: [ubuntu-20.04, macOS-11, windows-2019]
+        python-version: ["3.6", "3.8", "3.10"]
         include:
-          - os: ubuntu-18.04
+          - os: ubuntu-20.04
             python-version: 2.7
     # Timeout: https://stackoverflow.com/a/59076067/4521646
     timeout-minutes: 10
@@ -70,3 +73,18 @@ jobs:
         file: coverage.xml
         flags: pytest,python${{ matrix.python-version }}
         fail_ci_if_error: false
+
+
+  testing-guardian:
+    runs-on: ubuntu-latest
+    needs: pytester
+    if: always()
+    steps:
+    - run: echo "${{ needs.pytester.result }}"
+    - name: failing...
+      if: needs.pytester.result == 'failure'
+      run: exit 1
+    - name: cancelled or skipped...
+      if: contains(fromJSON('["cancelled", "skipped"]'), needs.pytester.result)
+      timeout-minutes: 1
+      run: sleep 90
