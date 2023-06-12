@@ -11,6 +11,7 @@ concurrency:
   cancel-in-progress: ${{ ! (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/release/')) }}
 
 jobs:
+
   package:
     runs-on: ubuntu-latest
     steps:
@@ -32,17 +33,19 @@ jobs:
         python setup.py sdist bdist_wheel
         twine check dist/*
 
+
   pkg-install:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-20.04, macOS-11, windows-2019]
-        python-version: ["3.6", "3.8", "3.11"]
+        python-version: ["3.6", "3.8", "3.10"]
         include:
           - { os: ubuntu-20.04, python-version: 2.7 }
     # Timeout: https://stackoverflow.com/a/59076067/4521646
     timeout-minutes: 10
+
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -50,11 +53,16 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
+    - name: Adjust dead snakes
+      if: ${{ matrix.python-version == '3.6' }}
+      run: pip install numpy
+
     - name: Try installing
       run: |
         python setup.py install
         pip show gco-wrapper
         python -c "import gco ;  print(gco.__version__)"
+
 
   pip-dist:
     needs: pkg-install
@@ -68,6 +76,7 @@ jobs:
           - { os: ubuntu-20.04, python-version: 2.7 }
     # Timeout: https://stackoverflow.com/a/59076067/4521646
     timeout-minutes: 10
+
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
