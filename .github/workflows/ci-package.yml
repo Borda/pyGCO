@@ -88,7 +88,7 @@ jobs:
       run: |
         pip install build
         python -m build
-        ld -lh dist/
+        ls -lh dist/
 
     - name: Try installing
       working-directory: dist

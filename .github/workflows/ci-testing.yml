@@ -79,7 +79,9 @@ jobs:
       shell: bash
 
     - name: Test makefile
-      run: make all
+      run: |
+        make all
+        ls -lh tests/
 
   testing-guardian:
     runs-on: ubuntu-latest
