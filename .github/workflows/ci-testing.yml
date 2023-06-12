@@ -20,7 +20,7 @@ jobs:
         python-version: ["3.6", "3.9"]
         include:
           - { os: "ubuntu-22.04", python-version: "3.11" }
-          - { os: "macOS-13", python-version: "3.11" }
+          - { os: "macOS-12", python-version: "3.11" }
           - { os: "windows-2022", python-version: "3.11" }
           - { os: "ubuntu-20.04", python-version: "2.7" }
     # Timeout: https://stackoverflow.com/a/59076067/4521646
