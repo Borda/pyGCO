@@ -1,3 +1,5 @@
 pytest>=3.0
 pytest-cov
 coverage
+
+matplotlib>=2.0, <3.0"
