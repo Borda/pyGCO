@@ -1,57 +1,57 @@
 CXX=g++
 CFLAGS=-fPIC
-INC=-Igco_source -Igco
+INC=-Isrc/gco_cpp -Isrc/gco
 
 all: libcgco.so test_wrapper
 
 libcgco.so: \
-    gco_source/LinkedBlockList.o gco_source/graph.o gco_source/maxflow.o \
-        gco_source/GCoptimization.o cgco.o
+    src/gco_cpp/LinkedBlockList.o src/gco_cpp/graph.o src/gco_cpp/maxflow.o \
+        src/gco_cpp/GCoptimization.o cgco.o
 	$(CXX) -shared $(CFLAGS) \
-	    gco_source/LinkedBlockList.o \
-	    gco_source/graph.o \
-	    gco_source/maxflow.o \
-	    gco_source/GCoptimization.o \
+	    src/gco_cpp/LinkedBlockList.o \
+	    src/gco_cpp/graph.o \
+	    src/gco_cpp/maxflow.o \
+	    src/gco_cpp/GCoptimization.o \
 	    cgco.o \
 	    -o libcgco.so
 
 gco.so: \
-    gco_source/LinkedBlockList.o gco_source/graph.o gco_source/maxflow.o \
-        gco_source/GCoptimization.o
-	$(CXX) -shared $(CFLAGS) gco_source/LinkedBlockList.o \
-	    gco_source/graph.o \
-	    gco_source/maxflow.o \
-	    gco_source/GCoptimization.o -o gco.so
+    src/gco_cpp/LinkedBlockList.o src/gco_cpp/graph.o src/gco_cpp/maxflow.o \
+        src/gco_cpp/GCoptimization.o
+	$(CXX) -shared $(CFLAGS) src/gco_cpp/LinkedBlockList.o \
+	    src/gco_cpp/graph.o \
+	    src/gco_cpp/maxflow.o \
+	    src/gco_cpp/GCoptimization.o -o gco.so
 
-gco_source/LinkedBlockList.o: \
-    gco_source/LinkedBlockList.cpp \
-        gco_source/LinkedBlockList.h
+src/gco_cpp/LinkedBlockList.o: \
+    src/gco_cpp/LinkedBlockList.cpp \
+        src/gco_cpp/LinkedBlockList.h
 	$(CXX) $(CFLAGS) $(INC) \
-	    -c gco_source/LinkedBlockList.cpp \
-	    -o gco_source/LinkedBlockList.o
+	    -c src/gco_cpp/LinkedBlockList.cpp \
+	    -o src/gco_cpp/LinkedBlockList.o
 
-gco_source/graph.o: \
-    gco_source/graph.cpp gco_source/graph.h gco_source/block.h
+src/gco_cpp/graph.o: \
+    src/gco_cpp/graph.cpp src/gco_cpp/graph.h src/gco_cpp/block.h
 	$(CXX) $(CFLAGS) $(INC) \
-	    -c -x c++ gco_source/graph.cpp \
-	    -o gco_source/graph.o
+	    -c -x c++ src/gco_cpp/graph.cpp \
+	    -o src/gco_cpp/graph.o
 
-gco_source/maxflow.o: \
-    gco_source/block.h gco_source/graph.h gco_source/maxflow.cpp
+src/gco_cpp/maxflow.o: \
+    src/gco_cpp/block.h src/gco_cpp/graph.h src/gco_cpp/maxflow.cpp
 	$(CXX) $(CFLAGS) $(INC) \
-	    -c -x c++ gco_source/maxflow.cpp \
-	    -o gco_source/maxflow.o
+	    -c -x c++ src/gco_cpp/maxflow.cpp \
+	    -o src/gco_cpp/maxflow.o
 
-gco_source/GCoptimization.o: \
-    gco_source/GCoptimization.cpp gco_source/GCoptimization.h \
-        gco_source/LinkedBlockList.h gco_source/energy.h gco_source/graph.h \
-        gco_source/graph.o gco_source/maxflow.o
+src/gco_cpp/GCoptimization.o: \
+    src/gco_cpp/GCoptimization.cpp src/gco_cpp/GCoptimization.h \
+        src/gco_cpp/LinkedBlockList.h src/gco_cpp/energy.h src/gco_cpp/graph.h \
+        src/gco_cpp/graph.o src/gco_cpp/maxflow.o
 	$(CXX) $(CFLAGS) $(INC) \
-	    -c gco_source/GCoptimization.cpp \
-	    -o gco_source/GCoptimization.o
+	    -c src/gco_cpp/GCoptimization.cpp \
+	    -o src/gco_cpp/GCoptimization.o
 
 cgco.o: \
-    gco/cgco.cpp gco_source/GCoptimization.h
+    gco/cgco.cpp src/gco_cpp/GCoptimization.h
 	$(CXX) $(CFLAGS) $(INC) \
 	    -c gco/cgco.cpp \
 	    -o cgco.o
@@ -62,11 +62,11 @@ test_wrapper: \
 	    -o test_wrapper -Wl,-rpath,. -lcgco
 
 clean:
-	rm -f *.o gco_source/*.o test_wrapper
+	rm -f *.o src/gco_cpp/*.o test_wrapper
 
 rm:
-	rm -f *.o *.so gco_source/*.o *.zip test_wrapper
+	rm -f *.o *.so src/gco_cpp/*.o *.zip test_wrapper
 
 download:
 	wget -N -O gco-v3.0.zip http://vision.csd.uwo.ca/code/gco-v3.0.zip
-	unzip -o gco-v3.0.zip -d  ./gco_source
+	unzip -o gco-v3.0.zip -d  ./src/gco_cpp
