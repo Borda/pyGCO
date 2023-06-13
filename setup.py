@@ -19,7 +19,6 @@ Release package
 import os
 import re
 import sys
-from importlib.util import module_from_spec, spec_from_file_location
 
 try:
     from setuptools import Extension, find_packages, setup
@@ -33,11 +32,21 @@ URL_LIB_GCO = "http://vision.csd.uwo.ca/code/" + PACKAGE_NAME
 LOCAL_SOURCE = os.path.join("src", "gco_cpp")
 
 
-def _load_py_module(name, location):
-    spec = spec_from_file_location(name, location)
-    py = module_from_spec(spec)
-    spec.loader.exec_module(py)
-    return py
+try:
+    from importlib.util import module_from_spec, spec_from_file_location
+
+    def _load_py_module(module_name, location):
+        spec = spec_from_file_location(module_name, location)
+        py = module_from_spec(spec)
+        spec.loader.exec_module(py)
+        return py
+
+except ImportError:
+    import imp
+
+    def _load_py_module(module_name, location):
+        py = imp.load_source(module_name, location)
+        return py
 
 
 class BuildExt(build_ext):
