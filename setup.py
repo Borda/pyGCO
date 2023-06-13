@@ -78,7 +78,7 @@ if sys.version_info.major == 2:
 else:
     SETUP_REQUIRES = INSTALL_REQUIRES = ["Cython>=0.23.1", "numpy>=1.8.2"]
 
-ABOUT = _load_py_module(name="about", location=os.path.join("src", "gco", "__about__.py"))
+ABOUT = _load_py_module(module_name="about", location=os.path.join("src", "gco", "__about__.py"))
 
 with open("README.md", encoding="utf_8") as fp:
     readme = re.sub(
