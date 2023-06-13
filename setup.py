@@ -76,7 +76,7 @@ with open("README.md", encoding="utf_8") as fp:
         # replace image pattern
         pattern=r"\!\[([\w ]+)\]\(\./(.+)\)",
         # with static urls and the same format
-        repl=rf"![\1](https://raw.githubusercontent.com/borda/pyGCO/{ABOUT.__version__}/\2)",
+        repl=r"![\1](https://raw.githubusercontent.com/borda/pyGCO/%s/\2)" % ABOUT.__version__,
         # for whole README
         string=fp.read(),
     )
