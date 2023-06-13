@@ -33,7 +33,7 @@ URL_LIB_GCO = "http://vision.csd.uwo.ca/code/" + PACKAGE_NAME
 LOCAL_SOURCE = os.path.join("src", "gco_cpp")
 
 
-def _load_py_module(name: str, location: str):
+def _load_py_module(name, location):
     spec = spec_from_file_location(name, location)
     py = module_from_spec(spec)
     spec.loader.exec_module(py)
