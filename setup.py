@@ -75,12 +75,14 @@ GCO_FILES += [os.path.join("src", "gco", "cgco.cpp")]
 if sys.version_info.major == 2:
     # numpy v1.17 drops support for py2
     SETUP_REQUIRES = INSTALL_REQUIRES = ["Cython>=0.23.1", "numpy>=1.8.2, <1.17"]
+    encode_kw = {}
 else:
     SETUP_REQUIRES = INSTALL_REQUIRES = ["Cython>=0.23.1", "numpy>=1.8.2"]
+    encode_kw = dict(encoding="utf_8")
 
 ABOUT = _load_py_module(module_name="about", location=os.path.join("src", "gco", "__about__.py"))
 
-with open("README.md", encoding="utf_8") as fp:
+with open("README.md", **encode_kw) as fp:
     readme = re.sub(
         # replace image pattern
         pattern=r"\!\[([\w ]+)\]\(\./(.+)\)",
