@@ -1,5 +1,5 @@
 import numpy
-from __about__ import *  # noqa: F403
+from .__about__ import *  # noqa: F403
 
 # patch for numpy 1.24+
 for name, tp in [("int", int), ("float", float), ("bool", bool)]:
