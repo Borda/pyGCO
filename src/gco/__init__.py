@@ -1,4 +1,5 @@
 import numpy
+
 from .__about__ import *  # noqa: F403
 
 # patch for numpy 1.24+
