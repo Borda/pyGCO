@@ -71,18 +71,11 @@ GCO_FILES = [
     os.path.join(LOCAL_SOURCE, f) for f in ("graph.cpp", "maxflow.cpp", "LinkedBlockList.cpp", "GCoptimization.cpp")
 ]
 GCO_FILES += [os.path.join("src", "gco", "cgco.cpp")]
-
-if sys.version_info.major == 2:
-    # numpy v1.17 drops support for py2
-    SETUP_REQUIRES = INSTALL_REQUIRES = ["Cython>=0.23.1", "numpy>=1.8.2, <1.17"]
-    encode_kw = {}
-else:
-    SETUP_REQUIRES = INSTALL_REQUIRES = ["Cython>=0.23.1", "numpy>=1.8.2"]
-    encode_kw = dict(encoding="utf_8")
+SETUP_REQUIRES = INSTALL_REQUIRES = ["Cython>=0.23.1", "numpy>=1.8.2"]
 
 ABOUT = _load_py_module(module_name="about", location=os.path.join("src", "gco", "__about__.py"))
 
-with open("README.md", **encode_kw) as fp:
+with open("README.md", encoding="utf_8") as fp:
     readme = re.sub(
         # replace image pattern
         pattern=r"\!\[([\w ]+)\]\(\./(.+)\)",
@@ -142,11 +135,10 @@ setup(
         # "Topic :: Scientific/Engineering :: Image Segmentation",
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
     ],
 )
