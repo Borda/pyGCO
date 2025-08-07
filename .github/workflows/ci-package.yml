@@ -59,6 +59,7 @@ jobs:
 
     - name: Try installing
       run: |
+        pip install -q setuptools
         python setup.py install
         pip show gco-wrapper
         python -c "import gco ;  print(gco.__version__)"

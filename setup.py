@@ -79,7 +79,6 @@ if sys.version_info.major == 2:
 else:
     SETUP_REQUIRES = INSTALL_REQUIRES = ["Cython>=0.23.1", "numpy>=1.8.2"]
     encode_kw = dict(encoding="utf_8")
-SETUP_REQUIRES += ["setuptools", "wheel"]
 
 ABOUT = _load_py_module(module_name="about", location=os.path.join("src", "gco", "__about__.py"))
 
