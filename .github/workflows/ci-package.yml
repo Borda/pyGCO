@@ -53,13 +53,9 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    #- name: Adjust dead snakes
-    #  if: ${{ matrix.python-version == '3.6' }}
-    #  run: pip install numpy
-
     - name: Try installing
       run: |
-        pip install -q setuptools
+        pip install -q setuptools numpy
         python setup.py install
         pip show gco-wrapper
         python -c "import gco ;  print(gco.__version__)"

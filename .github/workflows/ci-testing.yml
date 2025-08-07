@@ -32,7 +32,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip --version
-        pip install -q setuptools
+        pip install -q setuptools numpy
         pip install -e . -U -r tests/requirements.txt
         pip list
       shell: bash
