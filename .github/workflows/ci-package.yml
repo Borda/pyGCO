@@ -39,13 +39,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, macOS-11, windows-2019]
-        python-version: ["3.6", "3.9"]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+        python-version: ["3.9", "3.12"]
         include:
-          - { os: "ubuntu-22.04", python-version: "3.10" }
-          - { os: "macOS-11", python-version: "3.10" }
-          - { os: "windows-2022", python-version: "3.10" }
-          - { os: "ubuntu-20.04", python-version: "2.7" }
+          - { os: "ubuntu-22.04", python-version: "2.7" }
     # Timeout: https://stackoverflow.com/a/59076067/4521646
     timeout-minutes: 10
 
@@ -56,9 +53,9 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Adjust dead snakes
-      if: ${{ matrix.python-version == '3.6' }}
-      run: pip install numpy
+    #- name: Adjust dead snakes
+    #  if: ${{ matrix.python-version == '3.6' }}
+    #  run: pip install numpy
 
     - name: Try installing
       run: |
@@ -73,13 +70,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, macOS-11, windows-2019]
-        python-version: ["3.6", "3.9"]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+        python-version: ["3.9", "3.12"]
         include:
-          - { os: "ubuntu-22.04", python-version: "3.10" }
-          - { os: "macOS-11", python-version: "3.10" }
-          - { os: "windows-2019", python-version: "3.10" }
-          - { os: "ubuntu-20.04", python-version: "2.7" }
+          - { os: "ubuntu-22.04", python-version: "2.7" }
     # Timeout: https://stackoverflow.com/a/59076067/4521646
     timeout-minutes: 10
 
