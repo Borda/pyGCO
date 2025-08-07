@@ -9,7 +9,7 @@ ci:
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.1.0
+    rev: v4.4.0
     hooks:
       - id: end-of-file-fixer
       - id: trailing-whitespace
@@ -20,20 +20,14 @@ repos:
       - id: check-added-large-files
       - id: check-docstring-first
 
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.10.1
+  - repo: https://github.com/psf/black
+    rev: 23.3.0
     hooks:
-      - id: isort
-        name: imports
+      - id: black
+        name: Format code
 
-  - repo: https://github.com/pre-commit/mirrors-yapf
-    rev: v0.32.0
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.0.272
     hooks:
-      - id: yapf
-        name: formatting
-
-  - repo: https://github.com/PyCQA/flake8
-    rev: 4.0.1
-    hooks:
-      - id: flake8
-        name: PEP8
+      - id: ruff
+        args: ["--fix"]

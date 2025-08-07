@@ -4,9 +4,9 @@ import sys
 import numpy as np
 
 try:
-    from cgco import _cgco, _SMOOTH_COST_FN
+    from cgco import _SMOOTH_COST_FN, _cgco
 except (ImportError, ModuleNotFoundError):
-    from gco.cgco import _cgco, _SMOOTH_COST_FN
+    from gco.cgco import _SMOOTH_COST_FN, _cgco
 
 # keep 4 effective digits for the fractional part if using real potentials
 # make sure pairwise * smooth = unary so that the unary potentials and pairwise
@@ -17,7 +17,7 @@ _PAIRWISE_FLOAT_PRECISION = 1000
 _SMOOTH_COST_PRECISION = 100
 
 _int_types = [np.int, np.intc, np.int32, np.int64, np.longlong]
-if sys.platform == 'win32':
+if sys.platform == "win32":
     _float_types = [np.float, np.float32, np.float64]
 else:
     _float_types = [np.float, np.float32, np.float64, np.float128]
@@ -27,8 +27,7 @@ _SMALL_CONSTANT = 1e-10
 
 # error classes
 class PyGcoError(Exception):
-
-    def __init__(self, msg=''):
+    def __init__(self, msg=""):
         self.msg = msg
 
     def __str__(self):
@@ -48,12 +47,11 @@ class IndexOutOfBoundError(PyGcoError):
 
 
 class GCO(object):
-
     def __init__(self):
         pass
 
     def create_general_graph(self, num_sites, num_labels, energy_is_float=False):
-        """ Create a general graph with specified number of sites and labels.
+        """Create a general graph with specified number of sites and labels.
         If energy_is_float is set to True, then automatic scaling and rounding
         will be applied to convert all energies to integers when running graph
         cuts. Then the final energy will be converted back to floats after the
@@ -132,8 +130,7 @@ class GCO(object):
     def set_site_data_cost(self, site, label, e):
         """Set site data cost, dataCost(site, label) = e.
         e should be of type int or float (python primitive type)."""
-        if site >= self.nb_sites or site < 0 or label < 0 \
-                or label >= self.nb_labels:
+        if site >= self.nb_sites or site < 0 or label < 0 or label >= self.nb_labels:
             raise IndexOutOfBoundError()
         _cgco.gcoSetSiteDataCost(
             self.handle,
@@ -161,8 +158,7 @@ class GCO(object):
 
         Each element in s1 should be smaller than the corresponding element in s2.
         """
-        if s1.min() < 0 or s1.max() >= self.nb_sites or s2.min() < 0 \
-                or s2.max() >= self.nb_sites:
+        if s1.min() < 0 or s1.max() >= self.nb_sites or s2.min() < 0 or s2.max() >= self.nb_sites:
             raise IndexOutOfBoundError()
 
         # These attributes are just used to keep a reference to corresponding
@@ -188,9 +184,9 @@ class GCO(object):
         cost[l1, l2] is the cost of labeling l1 as l2 (or l2 as l1)
         """
         if cost.shape[0] != cost.shape[1] or (cost != cost.T).any():
-            raise DataTypeNotSupportedError('Cost matrix not square or not symmetric')
+            raise DataTypeNotSupportedError("Cost matrix not square or not symmetric")
         if cost.shape[0] != self.nb_labels:
-            raise ShapeMismatchError('Cost matrix not of size nb_labels * nb_labels')
+            raise ShapeMismatchError("Cost matrix not of size nb_labels * nb_labels")
 
         # Just a reference
         self._smoothCost = self._convert_smooth_cost_array(cost)
@@ -209,7 +205,7 @@ class GCO(object):
 
     def set_smooth_cost_function(self, fun):
         """Pass a function to calculate the smooth cost for sites s1 and s2 labeled l1 and l2.
-            Function is of from fun (s1, s1, l1, l2) -> cost
+        Function is of from fun (s1, s1, l1, l2) -> cost
         """
 
         def _typesafe(s1, s2, l1, l2):
@@ -289,7 +285,7 @@ def cut_general_graph(
     unary_cost,
     pairwise_cost=None,
     n_iter=-1,
-    algorithm='expansion',
+    algorithm="expansion",
     init_labels=None,
     down_weight_factor=None,
 ):
@@ -336,9 +332,11 @@ def cut_general_graph(
     >>> labels  # doctest: +ELLIPSIS
     array([0, 0, 0, 0, 0, 1, 1, 1, 1, 1]...)
     """
-    energy_is_float = (unary_cost.dtype in _float_types) or \
-        (edge_weights.dtype in _float_types) or \
-        (pairwise_cost.dtype in _float_types)
+    energy_is_float = (
+        (unary_cost.dtype in _float_types)
+        or (edge_weights.dtype in _float_types)
+        or (pairwise_cost.dtype in _float_types)
+    )
 
     type_not_in = not all(arr.dtype in _int_types for arr in [unary_cost, edge_weights, pairwise_cost])
     if not energy_is_float and type_not_in:
@@ -365,7 +363,7 @@ def cut_general_graph(
         for i in range(n_sites):
             gc.init_label_at_site(i, init_labels[i])
 
-    if algorithm == 'expansion':
+    if algorithm == "expansion":
         gc.expansion(n_iter)
     else:
         gc.swap(n_iter)
@@ -377,7 +375,7 @@ def cut_general_graph(
 
 
 def get_images_edges_vh(height, width):
-    """ assuming uniform grid get vertical and horizontal edges
+    """assuming uniform grid get vertical and horizontal edges
 
     :param int height: image height
     :param int width: image width
@@ -407,7 +405,7 @@ def get_images_edges_vh(height, width):
 
 
 def get_images_edges_diag(height, width):
-    """ assuming uniform grid get diagonal edges:
+    """assuming uniform grid get diagonal edges:
     * top left -> bottom right
     * top right -> bottom left
 
@@ -446,7 +444,7 @@ def cut_grid_graph(
     cost_dr=None,
     cost_dl=None,
     n_iter=-1,
-    algorithm='expansion',
+    algorithm="expansion",
 ):
     """
     Apply multi-label graphcuts to grid graph.
@@ -477,10 +475,12 @@ def cut_grid_graph(
 
     Note all the node indices start from 0.
     """
-    energy_is_float = (unary_cost.dtype in _float_types) or \
-                      (pairwise_cost.dtype in _float_types) or \
-                      (cost_v.dtype in _float_types) or \
-                      (cost_h.dtype in _float_types)
+    energy_is_float = (
+        (unary_cost.dtype in _float_types)
+        or (pairwise_cost.dtype in _float_types)
+        or (cost_v.dtype in _float_types)
+        or (cost_h.dtype in _float_types)
+    )
 
     type_not_in = not all(arr.dtype in _int_types for arr in [unary_cost, pairwise_cost, cost_v, cost_h])
     if not energy_is_float and type_not_in:
@@ -496,32 +496,34 @@ def cut_grid_graph(
     gc.create_general_graph(height * width, n_labels, energy_is_float)
     gc.set_data_cost(unary_cost.reshape([height * width, n_labels]))
 
-    v_edges_from, h_edges_from, v_edges_to, h_edges_to = \
-        get_images_edges_vh(height, width)
+    v_edges_from, h_edges_from, v_edges_to, h_edges_to = get_images_edges_vh(height, width)
     v_edges_w = cost_v.flatten()
-    assert len(v_edges_from) == len(v_edges_w), \
-        'different sizes of edges %i and weights %i' \
-        % (len(v_edges_from), len(v_edges_w))
+    assert len(v_edges_from) == len(v_edges_w), "different sizes of edges %i and weights %i" % (
+        len(v_edges_from),
+        len(v_edges_w),
+    )
     h_edges_w = cost_h.flatten()
-    assert len(h_edges_from) == len(h_edges_w), \
-        'different sizes of edges %i and weights %i' \
-        % (len(h_edges_from), len(h_edges_w))
+    assert len(h_edges_from) == len(h_edges_w), "different sizes of edges %i and weights %i" % (
+        len(h_edges_from),
+        len(h_edges_w),
+    )
 
     edges_from = np.r_[v_edges_from, h_edges_from]
     edges_to = np.r_[v_edges_to, h_edges_to]
     edges_w = np.r_[v_edges_w, h_edges_w]
 
     if cost_dr is not None and cost_dl is not None:
-        dr_edges_from, dl_edges_from, dr_edges_to, dl_edges_to = \
-            get_images_edges_diag(height, width)
+        dr_edges_from, dl_edges_from, dr_edges_to, dl_edges_to = get_images_edges_diag(height, width)
         dr_edges_w = cost_dr.flatten()
-        assert len(dr_edges_from) == len(dr_edges_w), \
-            'different sizes of edges %i and weights %i' \
-            % (len(dr_edges_from), len(dr_edges_w))
+        assert len(dr_edges_from) == len(dr_edges_w), "different sizes of edges %i and weights %i" % (
+            len(dr_edges_from),
+            len(dr_edges_w),
+        )
         dl_edges_w = cost_dl.flatten()
-        assert len(dl_edges_from) == len(dl_edges_w), \
-            'different sizes of edges %i and weights %i' \
-            % (len(dl_edges_from), len(dl_edges_w))
+        assert len(dl_edges_from) == len(dl_edges_w), "different sizes of edges %i and weights %i" % (
+            len(dl_edges_from),
+            len(dl_edges_w),
+        )
 
         edges_from = np.r_[edges_from, dr_edges_from, dl_edges_from]
         edges_to = np.r_[edges_to, dr_edges_to, dl_edges_to]
@@ -531,7 +533,7 @@ def cut_grid_graph(
 
     gc.set_smooth_cost(pairwise_cost)
 
-    if algorithm == 'expansion':
+    if algorithm == "expansion":
         gc.expansion(n_iter)
     else:
         gc.swap(n_iter)
@@ -542,7 +544,7 @@ def cut_grid_graph(
     return labels
 
 
-def cut_grid_graph_simple(unary_cost, pairwise_cost, n_iter=-1, connect=4, algorithm='expansion'):
+def cut_grid_graph_simple(unary_cost, pairwise_cost, n_iter=-1, connect=4, algorithm="expansion"):
     """
     Apply multi-label graphcuts to grid graph. This is a simplified version of
     cut_grid_graph, with all edge weights set to 1.

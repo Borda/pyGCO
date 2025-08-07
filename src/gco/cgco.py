@@ -4,20 +4,20 @@ from glob import glob
 
 import numpy as np
 
-_LIB_BASE_NAME = 'libcgco'
-_LIB_EXTENSIONS = ('.so', '.pyd', '.dll')
+_LIB_BASE_NAME = "libcgco"
+_LIB_EXTENSIONS = (".so", ".pyd", ".dll")
 # or change this to your own path that contains libcgco.so
 _CGCO_LIB_PATH = os.path.dirname(os.path.abspath(os.path.realpath(__file__)))
 assert os.path.isdir(_CGCO_LIB_PATH)
 
-_LIBGCO_PATTER = os.path.join(_CGCO_LIB_PATH, _LIB_BASE_NAME + '.*')
+_LIBGCO_PATTER = os.path.join(_CGCO_LIB_PATH, _LIB_BASE_NAME + ".*")
 _LIST_LIBGCO = glob(_LIBGCO_PATTER)
 if not _LIST_LIBGCO:
-    raise FileNotFoundError('no compiled library found in %s' % repr(_LIBGCO_PATTER))
+    raise FileNotFoundError("no compiled library found in %s" % repr(_LIBGCO_PATTER))
 
 _CGCO_LIB_NAMES = [os.path.basename(pl) for pl in _LIST_LIBGCO if os.path.splitext(pl)[1] in _LIB_EXTENSIONS]
 if not _CGCO_LIB_NAMES:  # not sure what it found...
-    raise RuntimeError('found potential libs: %s' % repr(_LIST_LIBGCO))
+    raise RuntimeError("found potential libs: %s" % repr(_LIST_LIBGCO))
 _CGCO_LIB_NAME = _CGCO_LIB_NAMES[0]
 
 # change the type definition depending on your machine and the compiled GCO library

@@ -4,20 +4,19 @@ import unittest
 import matplotlib
 import numpy as np
 
-matplotlib.use('Agg')  # Force matplotlib to not use any Xwindows backend.
-import matplotlib.pyplot as plt
-
-import gco
+matplotlib.use("Agg")  # Force matplotlib to not use any Xwindows backend.
+import gco  # noqa: E402
+import matplotlib.pyplot as plt  # noqa: E402
 
 PLOT_SIZE = 6
-DIR_IMAGES = 'images'
+DIR_IMAGES = "images"
 np.random.seed(0)
 
 try:
     if not os.path.isdir(DIR_IMAGES):
         os.mkdir(DIR_IMAGES)
 except FileExistsError:
-    print('no permission to create a directory')
+    print("no permission to create a directory")
 
 # def get_uniform_smoothness_pw_single_image(img):
 #     """
@@ -57,7 +56,7 @@ except FileExistsError:
 
 
 def test_gc():
-    """  """
+    """ """
     gc = gco.GCO()
     gc.create_general_graph(3, 2, True)
     assert gc.handle is not None
@@ -65,13 +64,15 @@ def test_gc():
 
 
 def test_integer():
-    """  """
-    unary = np.array([
-        [2, 8, 8],
-        [7, 3, 7],
-        [8, 8, 2],
-        [6, 4, 6],
-    ])
+    """ """
+    unary = np.array(
+        [
+            [2, 8, 8],
+            [7, 3, 7],
+            [8, 8, 2],
+            [6, 4, 6],
+        ]
+    )
     edges = np.array([[0, 1], [1, 2], [2, 3]])
     edge_weight = np.array([3, 10, 1])
     smooth = 1 - np.eye(3)
@@ -81,12 +82,14 @@ def test_integer():
 
 
 def test_float():
-    """  """
-    unary = np.array([
-        [0.0, 1.0, 2.0],
-        [4.0, 1.0, 0.0],
-        [1.0, 0.0, 2.0],
-    ])
+    """ """
+    unary = np.array(
+        [
+            [0.0, 1.0, 2.0],
+            [4.0, 1.0, 0.0],
+            [1.0, 0.0, 2.0],
+        ]
+    )
     edges = np.array([[0, 1], [1, 2], [0, 2]]).astype(np.int32)
     smooth = (1 - np.eye(3)).astype(np.float)
     edge_weights = np.array([2.0, 0.0, 0.0])
@@ -97,14 +100,14 @@ def test_float():
 
 def draw_unary(axarr, unary):
     for i in range(unary.shape[-1]):
-        axarr[i].set_title('unary term #%i' % i)
-        bm = axarr[i].imshow(unary[:, :, i], cmap='gray', interpolation='nearest')
+        axarr[i].set_title("unary term #%i" % i)
+        bm = axarr[i].imshow(unary[:, :, i], cmap="gray", interpolation="nearest")
         plt.colorbar(bm, ax=axarr[i])
         # plt.contour(annot, colors='r')
 
 
 def test_grid():
-    """  """
+    """ """
     annot = np.zeros((100, 100))
     annot[:, 60:] = 2
     annot[15:65, 35:85] = 1
@@ -114,7 +117,7 @@ def test_grid():
 
     unary = np.tile(noise[:, :, np.newaxis], [1, 1, 3])
 
-    tmp = (unary[:, :, 1] - 1)
+    tmp = unary[:, :, 1] - 1
     tmp[annot == 0] *= -1
     unary[:, :, 1] = tmp
     unary[:, :, 2] = 2 - unary[:, :, 2]
@@ -122,23 +125,23 @@ def test_grid():
     fig, axarr = plt.subplots(ncols=unary.shape[-1], figsize=(unary.shape[-1] * PLOT_SIZE, PLOT_SIZE))
     draw_unary(axarr, unary)
     fig.tight_layout()
-    fig.savefig(os.path.join(DIR_IMAGES, 'grid_unary.png'))
+    fig.savefig(os.path.join(DIR_IMAGES, "grid_unary.png"))
 
     pairwise = (1 - np.eye(3)) * 10
     labels = gco.cut_grid_graph_simple(unary, pairwise, n_iter=-1)
 
     fig, axarr = plt.subplots(ncols=2, figsize=(2 * PLOT_SIZE, PLOT_SIZE))
-    axarr[0].set_title('original annotation')
+    axarr[0].set_title("original annotation")
     axarr[0].imshow(annot, interpolation="nearest")
-    axarr[1].set_title('resulting labeling')
+    axarr[1].set_title("resulting labeling")
     axarr[1].imshow(labels.reshape(*annot.shape), interpolation="nearest")
-    axarr[1].contour(annot, colors='w')
+    axarr[1].contour(annot, colors="w")
     fig.tight_layout()
-    fig.savefig(os.path.join(DIR_IMAGES, 'grid_labels.png')), plt.close()
+    fig.savefig(os.path.join(DIR_IMAGES, "grid_labels.png")), plt.close()
 
 
 def test_binary():
-    """  """
+    """ """
     annot = np.zeros((100, 100))
     annot[20:70, 30:80] = 1
     np.random.seed(0)
@@ -157,7 +160,7 @@ def test_binary():
     fig, axarr = plt.subplots(ncols=unary.shape[-1], figsize=(unary.shape[-1] * PLOT_SIZE, PLOT_SIZE))
     draw_unary(axarr, unary)
     fig.tight_layout()
-    fig.savefig(os.path.join(DIR_IMAGES, 'binary_unary.png'))
+    fig.savefig(os.path.join(DIR_IMAGES, "binary_unary.png"))
 
     # edges, edge_weights = get_uniform_smoothness_pw_single_image(img.shape)
     smooth = 1 - np.eye(2)
@@ -168,36 +171,36 @@ def test_binary():
     #   pw_cost*0, n_iter=-1)
 
     labels = gco.cut_grid_graph_simple(unary, smooth, n_iter=-1)
-    labels_0 = gco.cut_grid_graph_simple(unary, smooth * 0., n_iter=-1)
+    labels_0 = gco.cut_grid_graph_simple(unary, smooth * 0.0, n_iter=-1)
 
     fig, axarr = plt.subplots(ncols=3, figsize=(3 * PLOT_SIZE, PLOT_SIZE))
-    axarr[0].set_title('image')
-    axarr[0].imshow(img, cmap='gray', interpolation='nearest')
-    axarr[0].contour(annot, colors='r')
-    axarr[1].set_title('labeling (smooth=1)')
-    axarr[1].imshow(labels.reshape(*annot.shape), interpolation='nearest')
-    axarr[1].contour(annot, colors='w')
-    axarr[2].set_title('labeling (smooth=0)')
-    axarr[2].imshow(labels_0.reshape(*annot.shape), interpolation='nearest')
-    axarr[2].contour(annot, colors='w')
+    axarr[0].set_title("image")
+    axarr[0].imshow(img, cmap="gray", interpolation="nearest")
+    axarr[0].contour(annot, colors="r")
+    axarr[1].set_title("labeling (smooth=1)")
+    axarr[1].imshow(labels.reshape(*annot.shape), interpolation="nearest")
+    axarr[1].contour(annot, colors="w")
+    axarr[2].set_title("labeling (smooth=0)")
+    axarr[2].imshow(labels_0.reshape(*annot.shape), interpolation="nearest")
+    axarr[2].contour(annot, colors="w")
     fig.tight_layout()
-    fig.savefig(os.path.join(DIR_IMAGES, 'binary_labels-4conn.png')), plt.close()
+    fig.savefig(os.path.join(DIR_IMAGES, "binary_labels-4conn.png")), plt.close()
 
     labels = gco.cut_grid_graph_simple(unary, smooth, connect=8, n_iter=-1)
-    labels_0 = gco.cut_grid_graph_simple(unary, smooth * 0., connect=8, n_iter=-1)
+    labels_0 = gco.cut_grid_graph_simple(unary, smooth * 0.0, connect=8, n_iter=-1)
 
     fig, axarr = plt.subplots(ncols=3, figsize=(3 * PLOT_SIZE, PLOT_SIZE))
-    axarr[0].set_title('image')
-    axarr[0].imshow(img, cmap='gray', interpolation='nearest')
-    axarr[0].contour(annot, colors='r')
-    axarr[1].set_title('labeling (smooth=1)')
-    axarr[1].imshow(labels.reshape(*annot.shape), interpolation='nearest')
-    axarr[1].contour(annot, colors='w')
-    axarr[2].set_title('labeling (smooth=0)')
-    axarr[2].imshow(labels_0.reshape(*annot.shape), interpolation='nearest')
-    axarr[2].contour(annot, colors='w')
+    axarr[0].set_title("image")
+    axarr[0].imshow(img, cmap="gray", interpolation="nearest")
+    axarr[0].contour(annot, colors="r")
+    axarr[1].set_title("labeling (smooth=1)")
+    axarr[1].imshow(labels.reshape(*annot.shape), interpolation="nearest")
+    axarr[1].contour(annot, colors="w")
+    axarr[2].set_title("labeling (smooth=0)")
+    axarr[2].imshow(labels_0.reshape(*annot.shape), interpolation="nearest")
+    axarr[2].contour(annot, colors="w")
     fig.tight_layout()
-    fig.savefig(os.path.join(DIR_IMAGES, 'binary_labels-8conn.png')), plt.close()
+    fig.savefig(os.path.join(DIR_IMAGES, "binary_labels-8conn.png")), plt.close()
 
 
 def test_cost_fun():
@@ -219,7 +222,6 @@ def test_cost_fun():
 
 
 class TestGCO(unittest.TestCase):
-
     def test_all(self):
         test_gc()
         test_integer()
