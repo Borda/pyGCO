@@ -79,6 +79,7 @@ if sys.version_info.major == 2:
 else:
     SETUP_REQUIRES = INSTALL_REQUIRES = ["Cython>=0.23.1", "numpy>=1.8.2"]
     encode_kw = dict(encoding="utf_8")
+SETUP_REQUIRES += ["setuptools", "wheel"]
 
 ABOUT = _load_py_module(module_name="about", location=os.path.join("src", "gco", "__about__.py"))
 
@@ -145,9 +146,6 @@ setup(
         "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
