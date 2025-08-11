@@ -72,8 +72,8 @@ GCO_FILES = [
 GCO_FILES += [os.path.join("src", "gco", "cgco.cpp")]
 
 # numpy v1.17 drops support for py2
-SETUP_REQUIRES = ['Cython>=0.23.1', 'numpy>=1.8.2;python_version>=3.0', 'numpy>=1.8.2,numpy<1.17;python_version<3.0']
-INSTALL_REQUIRES = ['Cython>=0.23.1', 'numpy>=1.8.2;python_version>=3.0', 'numpy>=1.8.2,numpy<1.17;python_version<3.0']
+SETUP_REQUIRES = ["Cython>=0.23.1", "numpy>=1.8.2;python_version>=3.0", "numpy>=1.8.2,numpy<1.17;python_version<3.0"]
+INSTALL_REQUIRES = ["Cython>=0.23.1", "numpy>=1.8.2;python_version>=3.0", "numpy>=1.8.2,numpy<1.17;python_version<3.0"]
 
 ABOUT = _load_py_module(module_name="about", location=os.path.join("src", "gco", "__about__.py"))
 
