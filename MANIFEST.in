@@ -1,6 +1,5 @@
 include README.md
 include requirements.txt
-include requirements-py2.txt
 # Include source files
 recursive-include src *.TXT *.h *.cpp
 
