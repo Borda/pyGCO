@@ -1,8 +1,10 @@
-# Before submitting
+<details>
+<summary><strong>Before submitting</strong></summary>
 
 - [ ] Was this discussed/approved via a Github issue? (no need for typos and docs improvements)
 - [ ] Did you make sure to update the docs?
 - [ ] Did you write any new necessary tests?
+</details>
 
 ## What does this PR do?
 Fixes #(issue).

@@ -13,11 +13,7 @@ assignees: ''
 
 ### To Reproduce
 
-Steps to reproduce the behavior:
-
-1. Go to '...'
-2. Run '....'
-3. See error
+Steps to reproduce the behavior...
 
 <!-- If you have a code sample, error messages, stack traces, please provide it here as well -->
 
