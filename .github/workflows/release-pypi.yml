@@ -30,59 +30,59 @@ jobs:
         python setup.py sdist
         ls -lh dist/
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
-        name: pypi-packages-${{ github.sha }}
+        name: sdist-${{ github.sha }}
         path: dist
 
   build-wheels:
     runs-on: ${{ matrix.os }}
-    needs: build-sdist
     strategy:
-      fail-fast: true
-      max-parallel: 1
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
     steps:
     - uses: actions/checkout@master
-    - uses: actions/download-artifact@v2
-      with:
-        name: pypi-packages-${{ github.sha }}
-        path: dist
 
     - name: Building wheels
-      uses: pypa/cibuildwheel@v2.13.1
+      uses: pypa/cibuildwheel@v3.1.3
       env:
         # Disable building PyPy wheels on all platforms
         CIBW_SKIP: pp*
-      with:
-        output-dir: dist
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
-        name: pypi-packages-${{ github.sha }}
-        path: dist
+        name: cibw-wheels-${{ matrix.os }}
+        path: wheelhouse/
 
-  view-pkgs:
+  collect-pkgs:
     runs-on: ubuntu-latest
-    needs: build-wheels
+    needs: [build-sdist, build-wheels]
     steps:
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
+      with:
+        name: sdist-${{ github.sha }}
+        path: dist
+    - name: Download 📥
+      uses: actions/download-artifact@v4
+      with:
+        # download all build artifacts
+        pattern: cibw-wheels-*
+        merge-multiple: true
+        path: dist
+
+    - run: ls -lh dist/
+    - uses: actions/upload-artifact@v4
       with:
         name: pypi-packages-${{ github.sha }}
         path: dist
-    - run: ls -lh dist/
 
   publish-pypi:
     runs-on: ubuntu-latest
-    needs: build-wheels
+    needs: collect-pkgs
     if: startsWith(github.event.ref, 'refs/tags') || github.event_name == 'release'
     steps:
     - uses: actions/checkout@master
-    - uses: actions/setup-python@v2
-      with:
-        python-version: "3.9"
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
       with:
         name: pypi-packages-${{ github.sha }}
         path: dist
@@ -104,11 +104,11 @@ jobs:
 
   upload-package:
     runs-on: ubuntu-latest
-    needs: build-wheels
+    needs: collect-pkgs
     if: startsWith(github.event.ref, 'refs/tags') || github.event_name == 'release'
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/download-artifact@v2
+    - uses: actions/checkout@v4
+    - uses: actions/download-artifact@v4
       with:
         name: pypi-packages-${{ github.sha }}
         path: dist
