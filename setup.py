@@ -18,7 +18,6 @@ Release package
 
 import os
 import re
-import sys
 
 try:
     from setuptools import Extension, find_packages, setup
