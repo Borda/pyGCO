@@ -37,7 +37,6 @@ jobs:
 
   build-wheels:
     runs-on: ${{ matrix.os }}
-    needs: build-sdist
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
