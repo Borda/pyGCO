@@ -56,7 +56,7 @@ jobs:
     - name: Try installing
       run: |
         pip install -q setuptools numpy
-        python setup.py install
+        pip install .
         pip show gco-wrapper
         python -c "import gco ;  print(gco.__version__)"
 
