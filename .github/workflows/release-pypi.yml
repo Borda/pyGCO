@@ -52,8 +52,8 @@ jobs:
 
     - uses: actions/upload-artifact@v4
       with:
-        name: cibw-wheels-${{ strategy.job-index }}
-        path: ./wheelhouse/*.whl
+        name: cibw-wheels-${{ matrix.os }}
+        path: wheelhouse/
 
   collect-pkgs:
     runs-on: ubuntu-latest
@@ -108,7 +108,7 @@ jobs:
     needs: collect-pkgs
     if: startsWith(github.event.ref, 'refs/tags') || github.event_name == 'release'
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - uses: actions/download-artifact@v4
       with:
         name: pypi-packages-${{ github.sha }}
