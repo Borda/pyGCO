@@ -5,8 +5,9 @@ import matplotlib
 import numpy as np
 
 matplotlib.use("Agg")  # Force matplotlib to not use any Xwindows backend.
-import gco  # noqa: E402
 import matplotlib.pyplot as plt  # noqa: E402
+
+import gco  # noqa: E402
 
 PLOT_SIZE = 6
 DIR_IMAGES = "images"
