@@ -1,5 +1,4 @@
 import ctypes as ct  # noqa: F401
-import sys
 
 import numpy as np
 
@@ -18,7 +17,7 @@ _SMOOTH_COST_PRECISION = 100
 
 _int_types = [np.int, np.intc, np.int32, np.int64, np.longlong]
 _float_types = [np.float, np.float32, np.float64]
-if hasattr(np, "float128"): # for Linux and some older Mac OS X
+if hasattr(np, "float128"):  # for Linux and some older Mac OS X
     _float_types.append(np.float128)
 
 _SMALL_CONSTANT = 1e-10
