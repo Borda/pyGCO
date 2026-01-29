@@ -348,7 +348,7 @@ def cut_general_graph(
     if not energy_is_float and type_not_in:
         raise DataTypeNotSupportedError(
             "Unary and pairwise potentials should have consistent types. "
-            "Either integers of floats. Mixed types or other types are not supported."
+            "Either integers or floats. Mixed types or other types are not supported."
         )
 
     n_sites, n_labels = unary_cost.shape
