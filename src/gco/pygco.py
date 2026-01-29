@@ -299,9 +299,14 @@ def cut_general_graph(
     edge_weights: ndarray, int32 or float64, shape=(n_edges)
         Weights for each edge, listed in the same order as edges.
     unary_cost: ndarray, int32 or float64, shape=(n_vertices, n_labels)
-        Unary potentials
-    pairwise_cost: ndarray, int32 or float64, shape=(n_labels, n_labels)
-        Pairwise potentials for label compatibility
+        Unary costs for each vertex-label pair. The algorithm minimizes total
+        energy, so LOWER values indicate a vertex is MORE LIKELY to take a label.
+        If you have probabilities or scores where higher is better, negate them
+        first (e.g., unary_cost = -probabilities).
+    pairwise_cost: ndarray, int32 or float64, shape=(n_labels, n_labels), optional
+        Pairwise costs for label compatibility. pairwise_cost[i, j] is the cost
+        of assigning different labels i and j to adjacent vertices.
+        If None, no pairwise costs are used (equivalent to all zeros).
     n_iter: int, (default=-1)
         Number of iterations. n_iter=-1 means run the algorithm until convergence.
     algorithm: string, `expansion` or `swap`, default=expansion
@@ -333,20 +338,24 @@ def cut_general_graph(
     energy_is_float = (
         (unary_cost.dtype in _float_types)
         or (edge_weights.dtype in _float_types)
-        or (pairwise_cost.dtype in _float_types)
+        or (pairwise_cost is not None and pairwise_cost.dtype in _float_types)
     )
 
-    type_not_in = not all(arr.dtype in _int_types for arr in [unary_cost, edge_weights, pairwise_cost])
+    arrays_to_check = [unary_cost, edge_weights]
+    if pairwise_cost is not None:
+        arrays_to_check.append(pairwise_cost)
+    type_not_in = not all(arr.dtype in _int_types for arr in arrays_to_check)
     if not energy_is_float and type_not_in:
         raise DataTypeNotSupportedError(
             "Unary and pairwise potentials should have consistent types. "
-            "Either integers of floats. Mixed types or other types are not supported."
+            "Either integers or floats. Mixed types or other types are not supported."
         )
 
     n_sites, n_labels = unary_cost.shape
 
     if down_weight_factor is None:
-        max_arr = max(np.abs(unary_cost).max(), np.abs(edge_weights).max() * pairwise_cost.max())
+        pairwise_max = pairwise_cost.max() if pairwise_cost is not None else 0
+        max_arr = max(np.abs(unary_cost).max(), np.abs(edge_weights).max() * pairwise_max)
         down_weight_factor = max_arr + _SMALL_CONSTANT
 
     gc = GCO()
@@ -450,9 +459,13 @@ def cut_grid_graph(
     Parameters
     ----------
     unary_cost: ndarray, int32, shape=(height, width, n_labels)
-        Unary potentials
+        Unary costs for each pixel-label pair. The algorithm minimizes total
+        energy, so LOWER values indicate a pixel is MORE LIKELY to take a label.
+        If you have probabilities or scores where higher is better, negate them
+        first (e.g., unary_cost = -probabilities).
     pairwise_cost: ndarray, int32, shape=(n_labels, n_labels)
-        Pairwise potentials for label compatibility
+        Pairwise costs for label compatibility. pairwise_cost[i, j] is the cost
+        of assigning different labels i and j to adjacent pixels.
     cost_v: ndarray, int32, shape=(height-1, width)
         Vertical edge weights.
         cost_v[i,j] is the edge weight between (i,j) and (i+1,j)
@@ -550,9 +563,13 @@ def cut_grid_graph_simple(unary_cost, pairwise_cost, n_iter=-1, connect=4, algor
     Parameters
     ----------
     unary_cost: ndarray, int32, shape=(height, width, n_labels)
-        Unary potentials
+        Unary costs for each pixel-label pair. The algorithm minimizes total
+        energy, so LOWER values indicate a pixel is MORE LIKELY to take a label.
+        If you have probabilities or scores where higher is better, negate them
+        first (e.g., unary_cost = -probabilities).
     pairwise_cost: ndarray, int32, shape=(n_labels, n_labels)
-        Pairwise potentials for label compatibility
+        Pairwise costs for label compatibility. pairwise_cost[i, j] is the cost
+        of assigning different labels i and j to adjacent pixels.
     connect: int, number of connected components - 4 or 8
     n_iter: int, (default=-1)
         Number of iterations.
