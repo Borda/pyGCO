@@ -222,6 +222,81 @@ def test_cost_fun():
     assert np.array_equal(labels, np.array([1, 1, 0]))
 
 
+def test_multisegment_with_zero_pairwise():
+    """Test multi-segment (3+ labels) segmentation with zero pairwise costs.
+    
+    This test verifies that when pairwise costs are zero, the result should
+    match the argmin of unary costs (since algorithm minimizes energy).
+    
+    Addresses issue: Can't segment multisegment image using gco.cut_general_graph()
+    """
+    # Create a simple 3x3 grid with 3 labels
+    height, width = 3, 3
+    num_labels = 3
+    
+    # Create unary costs where each row should belong to a different label
+    # Remember: lower cost = more likely, so we use small values where pixel belongs
+    unary_cost = np.ones((height * width, num_labels)) * 10.0  # high cost by default
+    
+    # First row (pixels 0-2) should be label 0
+    unary_cost[0:3, 0] = 0.0
+    
+    # Second row (pixels 3-5) should be label 1
+    unary_cost[3:6, 1] = 0.0
+    
+    # Third row (pixels 6-8) should be label 2
+    unary_cost[6:9, 2] = 0.0
+    
+    # Create grid edges
+    E = (height - 1) * width + height * (width - 1)
+    edges = np.empty((E, 2), dtype=np.int32)
+    edge_weights = np.ones(E, dtype=np.float64)
+    idx = 0
+    
+    # horizontal edges
+    for row in range(height):
+        edges[idx:idx+width-1, 0] = np.arange(width-1) + row * width
+        edges[idx:idx+width-1, 1] = np.arange(width-1) + row * width + 1
+        idx += width-1
+    
+    # vertical edges
+    for col in range(width):
+        edges[idx:idx+height-1, 0] = np.arange(0, (height-1)*width, width) + col
+        edges[idx:idx+height-1, 1] = np.arange(width, height*width, width) + col
+        idx += height-1
+    
+    # Zero pairwise costs (no smoothness penalty)
+    pairwise_cost = np.zeros((num_labels, num_labels), dtype=np.float64)
+    
+    # Run graph cut
+    labels = gco.cut_general_graph(edges, edge_weights, unary_cost, pairwise_cost, algorithm='swap')
+    
+    # Expected labels should match argmin of unary costs
+    expected_labels = np.argmin(unary_cost, axis=1)
+    
+    assert np.array_equal(labels, expected_labels), \
+        f"Expected {expected_labels}, got {labels}"
+
+
+def test_none_pairwise():
+    """Test that pairwise_cost=None works correctly."""
+    unary = np.array([
+        [0.0, 1.0, 2.0],
+        [1.0, 0.0, 2.0],
+        [2.0, 1.0, 0.0],
+    ], dtype=np.float64)
+    
+    edges = np.array([[0, 1], [1, 2]], dtype=np.int32)
+    edge_weights = np.ones(2, dtype=np.float64)
+    
+    # Should work with None pairwise_cost
+    labels = gco.cut_general_graph(edges, edge_weights, unary, pairwise_cost=None, algorithm='swap')
+    
+    # Should match argmin since no pairwise influence
+    expected = np.argmin(unary, axis=1)
+    assert np.array_equal(labels, expected), f"Expected {expected}, got {labels}"
+
+
 class TestGCO(unittest.TestCase):
     def test_all(self):
         test_gc()
@@ -230,6 +305,8 @@ class TestGCO(unittest.TestCase):
         test_binary()
         test_grid()
         test_cost_fun()
+        test_multisegment_with_zero_pairwise()
+        test_none_pairwise()
 
 
 if __name__ == "__main__":
